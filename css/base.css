@@ -55,7 +55,7 @@
     --anim-normal: 0.35s;
 }
 /* =====================================
-   GLOBAL TOUCH LOCK- Cannot 
+   GLOBAL TOUCH LOCK- disable Guesters like pinch-zoom or double tap zoom
 ===================================== */
 
 html, body {

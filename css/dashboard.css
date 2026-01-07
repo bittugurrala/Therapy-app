@@ -3,20 +3,36 @@
     width: var(--card-width);
     border-radius: var(--card-border-radius);
     box-shadow: var(--shadow);
+
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
+
     font-size: var(--subheadings);
     font-family: var(--font-display);
-    /* Making touch frndly */
-    touch-action: manipulation;
-    cursor: pointer;
-}
-.module:hover{
-    border: 2px solid black;
 
+    border: 2px solid transparent;
+    cursor: pointer;
+    touch-action: manipulation;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
 }
+
+/* Desktop hover + mobile tap */
+.module:hover,
+.module.active{
+    border-color: black;
+    transform: translateY(-4px);
+}
+@media (hover: hover) {
+    .module:hover{
+        transform: translateY(-4px);
+    }
+}
+
 .logo{
     font-size: var(--heading);
     font-family: var(--font-main)
