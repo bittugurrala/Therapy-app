@@ -1,0 +1,23 @@
+.module{
+    height: var(--card-height);
+    width: var(--card-width);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--subheadings);
+    font-family: var(--font-display);
+    /* Making touch frndly */
+    touch-action: manipulation;
+    cursor: pointer;
+}
+.module:hover{
+    border: 2px solid black;
+
+}
+.logo{
+    font-size: var(--heading);
+    font-family: var(--font-main)
+}

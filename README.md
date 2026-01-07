@@ -26,7 +26,7 @@ therapy-app/
 │   ├── module.js
 │   └── game-loader.js          ← loads games dynamically
 │
-├── games/                      ← ⭐ THIS IS THE KEY
+├── games/                      ← THIS IS THE KEY
 │   ├── rotating-wheel/
 │   │   ├── index.html
 │   │   ├── style.css

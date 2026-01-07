@@ -1,0 +1,70 @@
+/* The project layout remains same for multiple files all the layout things are found here */
+
+body{
+    height: 100vh;
+    margin: 0;
+}
+
+.container{
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "header"
+        "main";
+}
+
+/* Header section of each module */
+.header-container{
+    text-align: center;
+    grid-area: header;
+    grid-template-columns: 1fr;
+    /* background-color: beige; */
+    flex-direction: row;
+    padding-left: 60px;
+    padding-top: 5px;
+
+
+/* Main sections of each module */
+}
+.main-container{
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    grid-area: main;
+    grid-template-columns: 1fr; 
+    row-gap: var(--row-gap);
+    column-gap: var(--col-gap);
+
+    
+}
+/* for Tablets */
+@media (min-width: 576px) {
+    .main-container{
+        grid-template-columns: repeat(2, minmax(250px, 1fr));
+        padding: 24px;
+    }
+    .header-container{
+        text-align: start;
+    }
+}
+/* For Ipads */
+@media (min-width: 768px) {
+    .main-container{
+        grid-template-columns: repeat(3, minmax(250px, 1fr));
+    }
+    .header-container{
+        text-align: start;
+    }
+}
+/* for PC and higher */
+@media (min-width: 1200px) {
+    .main-container{
+        grid-template-columns: repeat(4, minmax(250px, 1fr));
+    }
+    .header-container{
+        text-align: start;
+    }
+}
+

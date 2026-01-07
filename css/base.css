@@ -1,0 +1,81 @@
+/* =========================
+   THEME VARIABLES
+========================= */
+@import url('https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,100;1,100&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+:root {
+    /* Colors */
+    --bg-main: #EAF4FF;          /* calm blue */
+    --bg-card: #FFFFFF;
+    --bg-wheel: #000000;
+
+    --text-primary: #1A1A1A;
+    --text-secondary: #5F6F81;
+
+    --accent: #0084FF;
+    --success: #00D26A;
+    --warning: #FFD600;
+    --error: #FF1E1E;
+
+    /* Therapy-friendly colors */
+    --soft-yellow: #FFF6A3;
+    --soft-blue: #A8D8FF;
+    --soft-red: #FFB7B2;
+    --soft-green: #B9F2C7;
+
+    /* Shadow dimensions*/
+    --shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+
+    /* Fonts */
+    --font-main: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Poppins', system-ui, sans-serif;
+
+    /* Font sizes */
+    --heading: 50px;
+    --subheadings: minmax(20px, 30px);
+
+    /* Layout */
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+
+    /* cards size */
+    --card-height: clamp(150px, 10vw, 200px);
+    --card-width: clamp(200px, 20vw, 400px);
+    --card-border-radius: clamp(12px, 1.5vw, 20px);
+    --row-gap: clamp(5px, 3vw, 8px);
+    --col-gap: clamp(5px, 2vw, 10px);
+
+
+    /* Touch */
+    --touch-min: 56px;
+
+    /* 🎞 Animation */
+    --anim-fast: 0.2s;
+    --anim-normal: 0.35s;
+}
+/* =====================================
+   GLOBAL TOUCH LOCK- Cannot 
+===================================== */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    /* Disable text selection */
+    user-select: none;
+    -webkit-user-select: none;
+
+    /* Disable touch callouts (iOS) */
+    -webkit-touch-callout: none;
+
+    /* Disable zoom gestures */
+    touch-action: manipulation;
+
+    /* Smooth touch */
+    overscroll-behavior: none;
+
+    /* background-color: #eaf4ff; */
+}
+
