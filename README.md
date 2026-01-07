@@ -34,7 +34,7 @@ therapy-app/
 │   │
 │   ├── color-match/
 │   │   ├── index.html
-│   │   ├── style.css
+│   │   ├── style.css         #The Therapy-app project by BittuGurrala (Sai)
 │   │   └── script.js
 │   │
 │   ├── direction-touch/
@@ -53,3 +53,5 @@ therapy-app/
 │   └── icons/
 │
 └── README.md
+
+![alt text](image.png)
