@@ -18,11 +18,21 @@
 </head>
 <body>
     <div class = "container">
-        <header class = "header-container">
-            <h2 class = "logo">Let us learn</h2>
+        <header class="header-container">
+            <div class="header-left">
+                
+                <h2 class="logo">Let us learn</h2>
+            </div>
+
+            <div class="header-center">
+                <button class="back-btn" onclick="goBack()">←</button>
+                <span id="breadcrumb"></span>
+            </div>
+
         </header>
-        <main class = "main-container">
-            <div class = "module module-1">
+
+        <main class = "main-container" id="main-container">
+            <!-- <div class = "module module-1">
                 <p class = "heading">Vision Therapy</p>
             </div>
             <div class = "module module-2">
@@ -44,11 +54,24 @@
                 <p class = "heading">Coming soon...</p>
             </div>
             <div class = "module module-4">
-                <p class = "heading">Coming soon...</p>
-            </div>
+                <p class = "heading">Coming soon...</p> 
+            </div>-->
+            
             
             
         </main>
     </div>
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/module.js"></script>
+    <script src="js/game-loader.js"></script>
+
+    <!-- <script>
+        console.log("APP_DATA:", window.APP_DATA);
+    </script> -->
+
+
 </body>
 </html>

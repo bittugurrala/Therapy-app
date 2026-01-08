@@ -39,3 +39,50 @@
     font-size: var(--heading);
     font-family: var(--font-main)
 }
+.header-container {
+    display: flex;
+    /* grid-template-columns: auto 1fr auto;
+    align-items: center; */
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-center {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    font-family: var(--font-display);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.back-btn {
+    font-size: 18px;
+    /* padding: 6px 10px; */
+    margin-right: 10px;
+    cursor: pointer;
+    border: 0px;
+    color: None;
+}
+
+.breadcrumb .sep {
+    margin: 0 6px;
+    opacity: 0.6;
+}
+
