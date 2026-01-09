@@ -1,0 +1,304 @@
+:root {
+    --background: linear-gradient(#D7ECFF, #BFDFFF);;
+    --wheel: black;
+    --icon_color: gray;
+}
+
+/* ============================
+   GLOBAL LAYOUT
+============================ */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: var(--background); 
+}
+
+
+.main-layout {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2vw;
+}
+
+
+/* ============================
+   LEFT PLAY BUTTON
+============================ */
+.controls .btn {
+    width: clamp(70px, 10vw, 120px);
+    height: clamp(70px, 10vw, 120px);
+    /* border-radius: 20px; */
+    /* background: #f7f7f7; */
+    /* border: 2px solid #ddd; */
+}
+
+.fa-solid {
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    color: var(--icon_color);
+}
+
+
+/* ============================
+   ROTATING WHEEL (MAIN)
+============================ */
+.rotating-wheel {
+    background-color: var(--wheel);
+    height: 95vh;
+    width: 95vh;
+    max-width: 90vw;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    animation: rotateWheel 25s linear infinite;
+}
+
+/* Wheel rotation animation */
+@keyframes rotateWheel {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.heading {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: white;
+}
+
+
+/* ============================
+   HAMBURGER BUTTON
+============================ */
+.hamburger-btn {
+    background: transparent;
+    border: none;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--icon_color);
+}
+
+
+/* ============================
+   OFFCANVAS MENU
+============================ */
+.offcanvas {
+    background-color: #111 !important;
+    color: white;
+}
+
+.offcanvas .nav-btn {
+    width: 100%;
+    padding: 1rem;
+    background: #222;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: #ccc;
+}
+
+
+/* ============================
+   RESPONSIVE — TABLETS
+============================ */
+@media (max-width: 1024px) {
+
+    .rotating-wheel {
+        height: 85vh;
+        width: 85vh;
+    }
+
+    .controls .btn {
+        width: clamp(60px, 12vw, 100px);
+        height: clamp(60px, 12vw, 100px);
+    }
+
+    .hamburger-btn {
+        font-size: 2.5rem;
+    }
+}
+
+
+/* ============================
+   RESPONSIVE — MOBILE (<600px)
+============================ */
+@media (max-width: 600px) {
+
+    .main-layout {
+        padding: 0 1rem;
+    }
+
+    .rotating-wheel {
+        height: 75vh;
+        width: 75vh;
+    }
+
+    .controls .btn {
+        width: 60px;
+        height: 60px;
+    }
+
+    .hamburger-btn {
+        font-size: 2rem;
+    }
+}
+
+
+/* ============================
+   BUBBLE SYSTEM
+============================ */
+#bubble-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+/* Bubble stays FIXED (wheel rotates behind) */
+.bubble {
+    position: absolute;
+    height: clamp(34px, 5vw, 76px);
+    width: clamp(34px, 5vw, 76px);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.25s ease;
+    border: 3px solid rgba(255,255,255,0.4);
+}
+
+/* Press reaction */
+.bubble:active {
+    transform: scale(1.1);
+}
+
+/* Bubble pop animation */
+.bubble.pop {
+    animation: popAnim 0.25s ease-out forwards;
+}
+
+@keyframes popAnim {
+    to {
+        transform: scale(1.7);
+        opacity: 0;
+    }
+}
+#target-display {
+    position: absolute;
+    top: 5%;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: white;
+    font-weight: bold;
+    text-shadow: 2px 3px 8px rgba(0,0,0,0.6);
+    z-index: 20;
+    pointer-events: none;
+}
+#target-box {
+    margin-top: 20px;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: bold;
+    color: #333;
+}
+
+#target-value {
+    font-size: clamp(2rem, 3vw, 3rem);
+    color: #ff5722;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.modeSwitch {
+    width: clamp(70px, 10vw, 120px);
+    height: clamp(40px, 6vw, 70px);
+    border-radius: 15px;
+    background: #e3e3e3;
+    border: 2px solid #bbb;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+}
+.bubble.wrong {
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-6px); }
+    100% { transform: translateX(0); }
+}
+/* iPad Portrait (768 x 1024) */
+@media (min-width: 700px) and (max-width: 1025px) and (orientation: portrait) {
+    .rotating-wheel {
+        height: 88vh;
+        width: 88vh;
+        max-width: 88vh; /* keep circle perfect */
+    }
+
+    .bubble {
+        height: 90px !important;
+        width: 90px !important;
+        font-size: 2.2rem !important;
+    }
+
+    #target-box {
+        font-size: 2rem;
+    }
+
+    #target-value {
+        font-size: 3rem;
+    }
+}
+
+/* iPad Landscape (1024 x 768) */
+@media (min-width: 1000px) and (max-width: 1400px) and (orientation: landscape) {
+    .rotating-wheel {
+        height: 80vh;
+        width: 80vh;
+    }
+
+    .bubble {
+        height: 95px !important;
+        width: 95px !important;
+        font-size: 2.5rem !important;
+    }
+}
+/* iPad Portrait */
+@media (min-width: 768px) and (max-width: 1050px) and (orientation: portrait) {
+
+    .rotating-wheel {
+        height: 85vh !important;
+        width: 85vh !important;
+    }
+
+    .bubble {
+        height: 110px !important;
+        width: 110px !important;
+        font-size: 2.7rem !important;
+    }
+}
+
+/* iPad Landscape */
+@media (min-width: 1000px) and (max-width: 1400px) and (orientation: landscape) {
+
+    .rotating-wheel {
+        height: 80vh !important;
+        width: 80vh !important;
+    }
+
+    .bubble {
+        height: 105px !important;
+        width: 105px !important;
+        font-size: 2.6rem !important;
+    }
+}

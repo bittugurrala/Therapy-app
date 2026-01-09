@@ -1,45 +1,69 @@
-// =====================================
-// APP STATE
-// =====================================
+/***********************
+ * GLOBAL STATE
+ ***********************/
 window.APP_STATE = {
-    view: "dashboard", // "dashboard" | "module" | "game"
+    view: "dashboard",          // dashboard | module | game
     selectedTherapy: null,
     selectedGame: null
 };
 
-// =====================================
-// APP DATA
-// =====================================
+/***********************
+ * DATA
+ ***********************/
 window.APP_DATA = {
     therapies: [
+        // Vision Therapy
         {
             id: "vision",
             title: "Vision Therapy",
             games: [
+                // Rotating Wheel game
                 {
                     id: "wheel",
                     title: "Rotating Wheel",
                     variants: [
-                        { id: "capital", title: "Capital Letters" },
-                        { id: "small", title: "Small Letters" },
-                        { id: "colors", title: "Colors" },
-                        { id: "fruits", title: "Fruits" }
+                        // color variant
+                        {
+                            id: "color",
+                            title: "Color Wheel",
+                            url: "games/color-wheel/index.html"
+                        },
+                        // capital letters variant
+                        {
+                            id: "capital",
+                            title: "Capital Letters",
+                            url: "games/capital-letters/index.html"
+                        },
+                        // small letters variant
+                        {
+                            id: "small",
+                            title: "Small Letters",
+                            url: "games/small-letters/index.html"
+                        }
                     ]
                 },
+                // Alphabets game
                 {
-                    id: "alphabates",
-                    title: "Alphabates",
-                    variants: []
+                    id: "alphabets",
+                    title: "Alphabets",
+                    variants: [
+                        {
+                            id: "test",
+                            title: "Test Variant",
+                            url: "games/test/index.html"
+                        }
+                    ]
                 }
             ]
         },
+        // Speech Therapy
         {
             id: "speech",
             title: "Speech Therapy",
             games: [
                 {
-                    id: "wheel",
-                    title: "Rotating Wheel",
+                    id: "coming",
+                    title: "Coming Soon",
                     variants: []
                 }
             ]
@@ -47,147 +71,181 @@ window.APP_DATA = {
     ]
 };
 
-// =====================================
-// RENDER CONTROLLER
-// =====================================
+/***********************
+ * STATE HELPER
+ ***********************/
+function updateState(patch = {}) {
+    Object.assign(window.APP_STATE, patch);
+    render();
+}
+
+/***********************
+ * RENDER CONTROLLER
+ ***********************/
 function render() {
+    const main = document.querySelector(".main-container");
+    if (!main) return;
+
+    // ONLY place DOM is cleared
+    main.innerHTML = "";
+
     if (APP_STATE.view === "dashboard") {
         renderDashboard();
     }
-
-    if (APP_STATE.view === "module") {
+    else if (APP_STATE.view === "module" && APP_STATE.selectedTherapy) {
         renderModule(APP_STATE.selectedTherapy);
     }
-
-    if (APP_STATE.view === "game") {
+    else if (APP_STATE.view === "game" && APP_STATE.selectedGame) {
         renderGame(APP_STATE.selectedGame);
     }
 
     updateBreadcrumb();
 }
 
-// =====================================
-// DASHBOARD
-// =====================================
+/***********************
+ * DASHBOARD
+ ***********************/
 function renderDashboard() {
     const main = document.querySelector(".main-container");
-    main.innerHTML = "";
 
     APP_DATA.therapies.forEach(therapy => {
         const card = document.createElement("div");
         card.className = "module";
-
-        card.innerHTML = `
-            <p class="heading">${therapy.title}</p>
-        `;
-
-        card.onclick = () => {
-            APP_STATE.view = "module";
-            APP_STATE.selectedTherapy = therapy.id;
-            render();
-        };
-
+        card.dataset.therapy = therapy.id;
+        card.innerHTML = `<p class="heading">${therapy.title}</p>`;
         main.appendChild(card);
     });
 }
 
-
-// =====================================
-// MODULE (THERAPY)
-// =====================================
+/***********************
+ * MODULE (GAMES)
+ ***********************/
 function renderModule(therapyId) {
     const therapy = APP_DATA.therapies.find(t => t.id === therapyId);
     if (!therapy) return;
 
     const main = document.querySelector(".main-container");
-    main.innerHTML = "";
 
     therapy.games.forEach(game => {
         const card = document.createElement("div");
         card.className = "module";
+        card.dataset.game = game.id;
         card.innerHTML = `<p class="heading">${game.title}</p>`;
-
-        card.onclick = () => navigateToGame(game.id);
-
         main.appendChild(card);
     });
 }
 
-// =====================================
-// GAME
-// =====================================
+/***********************
+ * GAME (VARIANTS)
+ ***********************/
 function renderGame(gameId) {
+    const therapy = APP_DATA.therapies.find(t => t.id === APP_STATE.selectedTherapy);
+    const game = therapy?.games.find(g => g.id === gameId);
+    if (!game) return;
+
     const main = document.querySelector(".main-container");
 
-    main.innerHTML = `
-        <div class="module">
-            <p class="heading">Game Screen</p>
-            <p>${gameId}</p>
-        </div>
-    `;
-}
-
-// =====================================
-// NAVIGATION
-// =====================================
-function navigateToModule(therapyId) {
-    APP_STATE.view = "module";
-    APP_STATE.selectedTherapy = therapyId;
-    APP_STATE.selectedGame = null;
-    render();
-}
-
-function navigateToGame(gameId) {
-    APP_STATE.view = "game";
-    APP_STATE.selectedGame = gameId;
-    render();
-}
-
-function goBack() {
-    if (APP_STATE.view === "game") {
-        APP_STATE.view = "module";
-        APP_STATE.selectedGame = null;
-    } else if (APP_STATE.view === "module") {
-        APP_STATE.view = "dashboard";
-        APP_STATE.selectedTherapy = null;
-    }
-    render();
-}
-
-// =====================================
-// HEADER + BREADCRUMB
-// =====================================
-function updateBreadcrumb() {
-    const breadcrumb = document.getElementById("breadcrumb");
-    if (!breadcrumb) return;
-
-    let path = ["Dashboard"];
-
-    if (APP_STATE.selectedTherapy) {
-        const therapy = APP_DATA.therapies.find(
-            t => t.id === APP_STATE.selectedTherapy
-        );
-        if (therapy) path.push(therapy.title);
+    if (!game.variants || game.variants.length === 0) {
+        const card = document.createElement("div");
+        card.className = "module";
+        card.innerHTML = `<p class="heading">Coming Soon</p>`;
+        main.appendChild(card);
+        return;
     }
 
-    if (APP_STATE.selectedGame) {
+    game.variants.forEach(variant => {
+        const card = document.createElement("div");
+        card.className = "module";
+        card.dataset.variant = variant.id;
+        card.innerHTML = `<p class="heading">${variant.title}</p>`;
+        main.appendChild(card);
+    });
+}
+
+/***********************
+ * EVENT DELEGATION
+ ***********************/
+function onMainContainerClick(e) {
+    const card = e.target.closest(".module");
+    if (!card) return;
+
+    // Dashboard → Module
+    if (card.dataset.therapy) {
+        updateState({
+            view: "module",
+            selectedTherapy: card.dataset.therapy,
+            selectedGame: null
+        });
+        return;
+    }
+
+    // Module → Game
+    if (card.dataset.game) {
+        updateState({
+            view: "game",
+            selectedGame: card.dataset.game
+        });
+        return;
+    }
+
+    // Game → Launch Variant (OPEN GAME URL)
+    if (card.dataset.variant) {
         const therapy = APP_DATA.therapies.find(
             t => t.id === APP_STATE.selectedTherapy
         );
         const game = therapy?.games.find(
             g => g.id === APP_STATE.selectedGame
         );
-        if (game) path.push(game.title);
-    }
+        const variant = game?.variants.find(
+            v => v.id === card.dataset.variant
+        );
 
-    breadcrumb.innerHTML = path.join(
-        " <span class='sep'>›</span> "
-    );
+        if (variant?.url) {
+            window.location.href = variant.url;
+        } else {
+            console.error("Variant URL missing:", card.dataset.variant);
+        }
+    }
 }
 
-// =====================================
-// INIT
-// =====================================
+/***********************
+ * BREADCRUMB
+ ***********************/
+function updateBreadcrumb() {
+    const breadcrumb = document.getElementById("breadcrumb");
+    if (!breadcrumb) return;
+
+    let path = ["Dashboard"];
+
+    const therapy = APP_DATA.therapies.find(t => t.id === APP_STATE.selectedTherapy);
+    if (therapy) path.push(therapy.title);
+
+    const game = therapy?.games.find(g => g.id === APP_STATE.selectedGame);
+    if (game) path.push(game.title);
+
+    breadcrumb.innerHTML = path.join(" <span class='sep'>›</span> ");
+}
+
+/***********************
+ * BACK BUTTON
+ ***********************/
+function goBack() {
+    if (APP_STATE.view === "game") {
+        updateState({ view: "module", selectedGame: null });
+    }
+    else if (APP_STATE.view === "module") {
+        updateState({ view: "dashboard", selectedTherapy: null });
+    }
+}
+window.goBack = goBack;
+
+/***********************
+ * INIT
+ ***********************/
 document.addEventListener("DOMContentLoaded", () => {
+    const main = document.querySelector(".main-container");
+    if (main) {
+        main.addEventListener("click", onMainContainerClick);
+    }
     render();
 });
