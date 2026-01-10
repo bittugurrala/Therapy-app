@@ -152,7 +152,7 @@ html, body {
 }
 
 .icon-btn {
-    background: rgba(255, 255, 255, 0.9);
+    /* background: rgba(255, 255, 255, 0.9); */
     border: none;
     width: 42px;
     height: 42px;
@@ -161,9 +161,9 @@ html, body {
     cursor: pointer;
 }
 
-.icon-btn:hover {
+/* .icon-btn:hover {
     background: #fff;
-}
+} */
 
 .icon-btn.danger {
     color: red;
