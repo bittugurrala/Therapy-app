@@ -78,4 +78,51 @@ html, body {
 
     /* background-color: #eaf4ff; */
 }
+.game-frame {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    border: none;
+    background: #fff;
+    z-index: 9999;
+}
+/* GAME FULLSCREEN OVERLAY */
+.game-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 9999;
+}
+
+.game-overlay.hidden {
+    display: none;
+}
+
+#game-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* EXIT BUTTON */
+.exit-btn {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    z-index: 10000;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.9);
+}
+
+/* PREVENT SCROLL */
+html, body {
+    overscroll-behavior: none;
+}
+
 

@@ -72,17 +72,35 @@
     align-items: center;
 }
 
-.back-btn {
-    font-size: 18px;
-    /* padding: 6px 10px; */
-    margin-right: 10px;
-    cursor: pointer;
-    border: 0px;
-    color: None;
+#breadcrumb {
+    font-size: 14px;
+    color: #444;
+    cursor: default;
+    user-select: none;
 }
 
-.breadcrumb .sep {
-    margin: 0 6px;
-    opacity: 0.6;
+.crumb {
+    cursor: pointer;
+    color: #444;
 }
+
+.crumb:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-item:hover {
+    text-decoration: underline;
+}
+
+.crumb.active {
+    font-weight: 600;
+    cursor: default;
+    text-decoration: underline;
+}
+
+.sep {
+    margin: 0 6px;
+    color: #aaa;
+}
+
 

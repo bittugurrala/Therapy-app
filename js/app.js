@@ -12,29 +12,24 @@ window.APP_STATE = {
  ***********************/
 window.APP_DATA = {
     therapies: [
-        // Vision Therapy
         {
             id: "vision",
             title: "Vision Therapy",
             games: [
-                // Rotating Wheel game
                 {
                     id: "wheel",
                     title: "Rotating Wheel",
                     variants: [
-                        // color variant
                         {
                             id: "color",
                             title: "Color Wheel",
                             url: "games/color-wheel/index.html"
                         },
-                        // capital letters variant
                         {
                             id: "capital",
                             title: "Capital Letters",
                             url: "games/capital-letters/index.html"
                         },
-                        // small letters variant
                         {
                             id: "small",
                             title: "Small Letters",
@@ -42,7 +37,6 @@ window.APP_DATA = {
                         }
                     ]
                 },
-                // Alphabets game
                 {
                     id: "alphabets",
                     title: "Alphabets",
@@ -56,7 +50,6 @@ window.APP_DATA = {
                 }
             ]
         },
-        // Speech Therapy
         {
             id: "speech",
             title: "Speech Therapy",
@@ -75,18 +68,17 @@ window.APP_DATA = {
  * STATE HELPER
  ***********************/
 function updateState(patch = {}) {
-    Object.assign(window.APP_STATE, patch);
+    Object.assign(APP_STATE, patch);
     render();
 }
 
 /***********************
- * RENDER CONTROLLER
+ * MAIN RENDER
  ***********************/
 function render() {
     const main = document.querySelector(".main-container");
     if (!main) return;
 
-    // ONLY place DOM is cleared
     main.innerHTML = "";
 
     if (APP_STATE.view === "dashboard") {
@@ -188,7 +180,7 @@ function onMainContainerClick(e) {
         return;
     }
 
-    // Game → Launch Variant (OPEN GAME URL)
+    // Game → Variant (launch fullscreen)
     if (card.dataset.variant) {
         const therapy = APP_DATA.therapies.find(
             t => t.id === APP_STATE.selectedTherapy
@@ -201,9 +193,7 @@ function onMainContainerClick(e) {
         );
 
         if (variant?.url) {
-            window.location.href = variant.url;
-        } else {
-            console.error("Variant URL missing:", card.dataset.variant);
+            launchGame(variant.url);
         }
     }
 }
@@ -215,29 +205,99 @@ function updateBreadcrumb() {
     const breadcrumb = document.getElementById("breadcrumb");
     if (!breadcrumb) return;
 
-    let path = ["Dashboard"];
+    breadcrumb.innerHTML = "";
 
-    const therapy = APP_DATA.therapies.find(t => t.id === APP_STATE.selectedTherapy);
-    if (therapy) path.push(therapy.title);
+    const path = [{ title: "Dashboard", view: "dashboard" }];
 
-    const game = therapy?.games.find(g => g.id === APP_STATE.selectedGame);
-    if (game) path.push(game.title);
+    const therapy = APP_DATA.therapies.find(
+        t => t.id === APP_STATE.selectedTherapy
+    );
+    if (therapy) path.push({ title: therapy.title, view: "module" });
 
-    breadcrumb.innerHTML = path.join(" <span class='sep'>›</span> ");
+    const game = therapy?.games.find(
+        g => g.id === APP_STATE.selectedGame
+    );
+    if (game) path.push({ title: game.title, view: "game" });
+
+    path.forEach((item, index) => {
+        const span = document.createElement("span");
+        span.className = "breadcrumb-item";
+        span.textContent = item.title;
+        span.style.cursor = "pointer";
+
+        span.onclick = () => {
+            if (item.view === "dashboard") {
+                updateState({ view: "dashboard", selectedTherapy: null, selectedGame: null });
+            }
+            else if (item.view === "module") {
+                updateState({ view: "module", selectedGame: null });
+            }
+            else if (item.view === "game") {
+                updateState({ view: "game" });
+            }
+        };
+
+        breadcrumb.appendChild(span);
+
+        if (index < path.length - 1) {
+            const sep = document.createElement("span");
+            sep.textContent = " › ";
+            breadcrumb.appendChild(sep);
+        }
+    });
 }
 
 /***********************
- * BACK BUTTON
+ * FULLSCREEN HELPERS
  ***********************/
-function goBack() {
-    if (APP_STATE.view === "game") {
-        updateState({ view: "module", selectedGame: null });
-    }
-    else if (APP_STATE.view === "module") {
-        updateState({ view: "dashboard", selectedTherapy: null });
-    }
+function enterFullscreen() {
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
 }
-window.goBack = goBack;
+
+function exitFullscreen() {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+}
+
+/* Disable zoom & pinch */
+document.addEventListener("gesturestart", e => e.preventDefault());
+document.addEventListener("gesturechange", e => e.preventDefault());
+document.addEventListener("gestureend", e => e.preventDefault());
+
+document.addEventListener("wheel", e => {
+    if (e.ctrlKey) e.preventDefault();
+}, { passive: false });
+
+/***********************
+ * GAME OVERLAY
+ ***********************/
+function launchGame(url) {
+    const overlay = document.getElementById("game-overlay");
+    const frame = document.getElementById("game-frame");
+
+    frame.src = url;
+    overlay.classList.remove("hidden");
+
+    enterFullscreen();
+}
+
+function exitGame() {
+    const overlay = document.getElementById("game-overlay");
+    const frame = document.getElementById("game-frame");
+
+    frame.src = "";
+    overlay.classList.add("hidden");
+
+    exitFullscreen();
+
+    // Return to variants (previous screen)
+    APP_STATE.view = "game";
+    render();
+}
+
+window.exitGame = exitGame;
 
 /***********************
  * INIT

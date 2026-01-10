@@ -25,7 +25,7 @@
             </div>
 
             <div class="header-center">
-                <button class="back-btn" onclick="goBack()">←</button>
+                <!-- <button class="back-btn" onclick="goBack()">←</button> -->
                 <span id="breadcrumb"></span>
             </div>
 
@@ -60,6 +60,12 @@
             
             
         </main>
+        <!-- GAME OVERLAY -->
+        <div id="game-overlay" class="game-overlay hidden">
+            <button class="exit-btn" onclick="exitGame()">✕</button>
+            <iframe id="game-frame" allowfullscreen></iframe>
+        </div>
+
     </div>
     <script src="js/data.js"></script>
     <script src="js/dashboard.js"></script>
