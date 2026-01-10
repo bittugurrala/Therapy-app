@@ -61,10 +61,24 @@
             
         </main>
         <!-- GAME OVERLAY -->
-        <div id="game-overlay" class="game-overlay hidden">
-            <button class="exit-btn" onclick="exitGame()">✕</button>
-            <iframe id="game-frame" allowfullscreen></iframe>
+        <!-- GAME OVERLAY -->
+        <div id="game-overlay" class="hidden">
+            <div class="game-toolbar">
+                <button class="icon-btn" onclick="toggleFullscreen()" title="Fullscreen">
+                    ⛶
+                </button>
+                <button class="icon-btn danger" onclick="exitGame()" title="Exit">
+                    ✕
+                </button>
+            </div>
+
+            <iframe
+                id="game-frame"
+                allow="fullscreen"
+                sandbox="allow-scripts allow-same-origin"
+            ></iframe>
         </div>
+
 
     </div>
     <script src="js/data.js"></script>

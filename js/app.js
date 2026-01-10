@@ -2,7 +2,7 @@
  * GLOBAL STATE
  ***********************/
 window.APP_STATE = {
-    view: "dashboard",          // dashboard | module | game
+    view: "dashboard", // dashboard | module | game
     selectedTherapy: null,
     selectedGame: null
 };
@@ -73,7 +73,7 @@ function updateState(patch = {}) {
 }
 
 /***********************
- * MAIN RENDER
+ * RENDER CONTROLLER
  ***********************/
 function render() {
     const main = document.querySelector(".main-container");
@@ -180,7 +180,7 @@ function onMainContainerClick(e) {
         return;
     }
 
-    // Game → Variant (launch fullscreen)
+    // Game → Launch Variant
     if (card.dataset.variant) {
         const therapy = APP_DATA.therapies.find(
             t => t.id === APP_STATE.selectedTherapy
@@ -194,8 +194,63 @@ function onMainContainerClick(e) {
 
         if (variant?.url) {
             launchGame(variant.url);
+        } else {
+            console.error("Variant URL missing");
         }
     }
+}
+
+/***********************
+ * GAME OVERLAY (FULLSCREEN)
+ ***********************/
+function launchGame(url) {
+    const overlay = document.getElementById("game-overlay");
+    const frame = document.getElementById("game-frame");
+
+    frame.src = url;
+    overlay.classList.remove("hidden");
+
+    enterFullscreen();
+}
+
+function exitGame() {
+    const overlay = document.getElementById("game-overlay");
+    const frame = document.getElementById("game-frame");
+
+    frame.src = "";
+    overlay.classList.add("hidden");
+
+    exitFullscreen();
+
+    // Go back to variants
+    APP_STATE.view = "game";
+    render();
+}
+
+/***********************
+ * FULLSCREEN HELPERS
+ ***********************/
+function isFullscreen() {
+    return !!(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement
+    );
+}
+
+function enterFullscreen() {
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+}
+
+function exitFullscreen() {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+}
+
+function toggleFullscreen() {
+    if (isFullscreen()) exitFullscreen();
+    else enterFullscreen();
 }
 
 /***********************
@@ -222,15 +277,22 @@ function updateBreadcrumb() {
     path.forEach((item, index) => {
         const span = document.createElement("span");
         span.className = "breadcrumb-item";
-        span.textContent = item.title;
+        span.innerText = item.title;
         span.style.cursor = "pointer";
 
         span.onclick = () => {
             if (item.view === "dashboard") {
-                updateState({ view: "dashboard", selectedTherapy: null, selectedGame: null });
+                updateState({
+                    view: "dashboard",
+                    selectedTherapy: null,
+                    selectedGame: null
+                });
             }
             else if (item.view === "module") {
-                updateState({ view: "module", selectedGame: null });
+                updateState({
+                    view: "module",
+                    selectedGame: null
+                });
             }
             else if (item.view === "game") {
                 updateState({ view: "game" });
@@ -240,64 +302,17 @@ function updateBreadcrumb() {
         breadcrumb.appendChild(span);
 
         if (index < path.length - 1) {
-            const sep = document.createElement("span");
-            sep.textContent = " › ";
-            breadcrumb.appendChild(sep);
+            breadcrumb.appendChild(document.createTextNode(" › "));
         }
     });
 }
 
 /***********************
- * FULLSCREEN HELPERS
+ * FULLSCREEN CHANGE LISTENER
  ***********************/
-function enterFullscreen() {
-    const el = document.documentElement;
-    if (el.requestFullscreen) el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-}
-
-function exitFullscreen() {
-    if (document.exitFullscreen) document.exitFullscreen();
-    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-}
-
-/* Disable zoom & pinch */
-document.addEventListener("gesturestart", e => e.preventDefault());
-document.addEventListener("gesturechange", e => e.preventDefault());
-document.addEventListener("gestureend", e => e.preventDefault());
-
-document.addEventListener("wheel", e => {
-    if (e.ctrlKey) e.preventDefault();
-}, { passive: false });
-
-/***********************
- * GAME OVERLAY
- ***********************/
-function launchGame(url) {
-    const overlay = document.getElementById("game-overlay");
-    const frame = document.getElementById("game-frame");
-
-    frame.src = url;
-    overlay.classList.remove("hidden");
-
-    enterFullscreen();
-}
-
-function exitGame() {
-    const overlay = document.getElementById("game-overlay");
-    const frame = document.getElementById("game-frame");
-
-    frame.src = "";
-    overlay.classList.add("hidden");
-
-    exitFullscreen();
-
-    // Return to variants (previous screen)
-    APP_STATE.view = "game";
-    render();
-}
-
-window.exitGame = exitGame;
+document.addEventListener("fullscreenchange", () => {
+    console.log("Fullscreen changed:", isFullscreen());
+});
 
 /***********************
  * INIT
@@ -309,3 +324,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     render();
 });
+
+/***********************
+ * EXPOSE GLOBALS
+ ***********************/
+window.exitGame = exitGame;
+window.toggleFullscreen = toggleFullscreen;

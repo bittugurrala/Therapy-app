@@ -124,5 +124,50 @@ html, body {
 html, body {
     overscroll-behavior: none;
 }
+#game-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 9999;
+}
+
+#game-overlay.hidden {
+    display: none;
+}
+
+#game-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Top-right toolbar */
+.game-toolbar {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 10px;
+    z-index: 10000;
+}
+
+.icon-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.icon-btn:hover {
+    background: #fff;
+}
+
+.icon-btn.danger {
+    color: red;
+}
+
 
 
