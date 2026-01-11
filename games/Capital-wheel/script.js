@@ -9,7 +9,6 @@ const wrongSound = document.getElementById("wrongSound");
 
 const targetValueBox = document.getElementById("target-value");
 
-
 // ===========================================
 // GAME SETTINGS
 // ===========================================
@@ -24,17 +23,18 @@ let brightColors = [
     { name: "Yellow", code: "#FFD600" }
 ];
 
-
-// SOFT THERAPY COLORS (Alphabet & Number mode)
+// SOFT THERAPY COLORS
 let therapyColors = [
-    "#FFF6A3", "#A8D8FF", "#FFB7B2", "#B9F2C7", "#D8C5FF"
-];
+    // "#FFF6A3", "#A8D8FF", "#FFB7B2", "#B9F2C7", "#D8C5FF"
+    "#ffffff", // white
+    "#2f80ff", // blue
+    "#ff3b30"  // red
 
+];
 
 let bubblePositions = [];
 let currentTarget = "";
 let poppingTargetActive = false;
-
 
 // ===========================================
 // UPDATE TARGET DISPLAY
@@ -43,31 +43,19 @@ function updateTargetDisplay() {
     targetValueBox.innerText = currentTarget;
 }
 
-
 // ===========================================
-// GET EXISTING SYMBOLS (TEXT OR COLOR NAMES)
+// GET EXISTING SYMBOLS
 // ===========================================
 function getRemainingSymbols() {
-
-    if (mode === "colors") {
-        let set = new Set();
-        document.querySelectorAll(".bubble").forEach(b => {
-            set.add(b.dataset.colorname);
-        });
-        return Array.from(set);
-    }
-
-    // alphabet & number modes
     let set = new Set();
-    document.querySelectorAll(".bubble").forEach(b => {
+    document.querySelectorAll(".bubble span").forEach(b => {
         set.add(b.innerText);
     });
     return Array.from(set);
 }
 
-
 // ===========================================
-// START A NEW LEVEL
+// START LEVEL
 // ===========================================
 function startLevel() {
     bubbleContainer.innerHTML = "";
@@ -78,49 +66,31 @@ function startLevel() {
         createBubble(randomSymbol());
     }
 
-    setTimeout(() => chooseNextTarget(), 300);
-
+    setTimeout(chooseNextTarget, 300);
 }
 
-
 // ===========================================
-// RANDOM SYMBOL GENERATOR
+// RANDOM SYMBOL (CAPITAL LETTERS ONLY)
 // ===========================================
 function randomSymbol() {
-    if (mode === "alphabets") {
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        return letters[Math.floor(Math.random() * letters.length)];
-    }
-
-    if (mode === "numbers") {
-        const nums = "0123456789";
-        return nums[Math.floor(Math.random() * nums.length)];
-    }
-
-    if (mode === "colors") {
-        return brightColors[Math.floor(Math.random() * brightColors.length)].name;
-    }
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    return letters[Math.floor(Math.random() * letters.length)];
 }
 
-
 // ===========================================
-// CREATE BUBBLE (supports all 3 modes)
+// CREATE BUBBLE
 // ===========================================
 function createBubble(symbol) {
     const bubble = document.createElement("div");
     bubble.classList.add("bubble");
 
-    if (mode === "colors") {
-        let colorObj = brightColors.find(c => c.name === symbol);
+    // ⭐ ADDED: wrap letter in span
+    const span = document.createElement("span");
+    span.innerText = symbol;
+    bubble.appendChild(span);
 
-        bubble.style.background = colorObj.code;
-        bubble.innerText = "";
-        bubble.dataset.colorname = colorObj.name;   // STORE color name
-    } else {
-        bubble.innerText = symbol;
-        bubble.style.background =
-            therapyColors[Math.floor(Math.random() * therapyColors.length)];
-    }
+    bubble.style.background =
+        therapyColors[Math.floor(Math.random() * therapyColors.length)];
 
     const wheelSize = bubbleContainer.clientWidth;
     const bubbleRadius = (wheelSize * 0.095) / 2;
@@ -138,7 +108,7 @@ function createBubble(symbol) {
 
         pos = { x, y };
 
-        if (!checkOverlap(pos, bubbleRadius)) {
+        if (!checkOverlap(pos)) {
             valid = true;
             break;
         }
@@ -155,24 +125,21 @@ function createBubble(symbol) {
     bubbleContainer.appendChild(bubble);
 }
 
-
 // ===========================================
-// COLLISION CHECKkkkkkkkkkk
+// COLLISION CHECK
 // ===========================================
-function checkOverlap(pos, radius) {
+function checkOverlap(pos) {
     for (const p of bubblePositions) {
         const dx = p.x - pos.x;
         const dy = p.y - pos.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-
         if (dist < 12) return true;
     }
     return false;
 }
 
-
 // ===========================================
-// CHOOSE NEXT TARGET
+// CHOOSE TARGET
 // ===========================================
 function chooseNextTarget() {
     let remaining = getRemainingSymbols();
@@ -183,75 +150,37 @@ function chooseNextTarget() {
     }
 
     currentTarget = remaining[Math.floor(Math.random() * remaining.length)];
-
-    if (mode === "colors") {
-        let colorObj = brightColors.find(c => c.name === currentTarget);
-        targetValueBox.innerText = currentTarget;
-        targetValueBox.style.color = colorObj.code;
-
-        setTimeout(() => {
-            speak(currentTarget);
-        }, 400);  // delay for smoothness
-    } 
-    else {
-        targetValueBox.innerText = currentTarget;
-        targetValueBox.style.color = "#ff5722";
-        // speak("target" + currentTarget)
-
-        setTimeout(() => {
-            speak("target" + currentTarget);
-        }, 400); // delay for alphabet/number too
-    }
-
+    updateTargetDisplay();
     poppingTargetActive = true;
+
+    setTimeout(() => speak(currentTarget), 400);
 }
 
-
-
-
-
 // ===========================================
-// CLICK HANDLER (updated for all modes)
+// CLICK HANDLER
 // ===========================================
 function handleBubbleClick(bubble) {
-
     if (!poppingTargetActive) return;
 
-    let clickedValue =
-        mode === "colors"
-            ? bubble.dataset.colorname
-            : bubble.innerText;
+    const clickedValue = bubble.querySelector("span").innerText;
 
     if (clickedValue === currentTarget) {
-
         speak(clickedValue);
-
         bubble.classList.add("pop");
 
         setTimeout(() => {
             bubble.remove();
 
             let stillLeft = false;
-
-            document.querySelectorAll(".bubble").forEach(b => {
-                let value =
-                    mode === "colors"
-                        ? b.dataset.colorname
-                        : b.innerText;
-                if (value === currentTarget) stillLeft = true;
+            document.querySelectorAll(".bubble span").forEach(b => {
+                if (b.innerText === currentTarget) stillLeft = true;
             });
 
             if (!stillLeft) {
                 poppingTargetActive = false;
-
-                // 500ms delay after popping last bubble
-                setTimeout(() => {
-                    chooseNextTarget();
-                }, 600);
+                setTimeout(chooseNextTarget, 600);
             }
-
         }, 250);
-
     } else {
         speak("wrong");
         bubble.classList.add("wrong");
@@ -259,9 +188,8 @@ function handleBubbleClick(bubble) {
     }
 }
 
-
 // ===========================================
-// SPEED CONTROL
+// SPEED CONTROL (UNCHANGED)
 // ===========================================
 document.querySelectorAll(".nav-btn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -277,27 +205,8 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
     });
 });
 
-
 // ===========================================
-// MODE SWITCH (A <-> 1)
-// ===========================================
-document.querySelector(".modeSwitch").addEventListener("click", () => {
-    mode = (mode === "alphabets") ? "numbers" : "alphabets";
-    startLevel();
-});
-
-
-// ===========================================
-// COLOR MODE SWITCH
-// ===========================================
-document.querySelector(".modeColors").addEventListener("click", () => {
-    mode = "colors";
-    startLevel();
-});
-
-
-// ===========================================
-// PLAY / PAUSE
+// PLAY / PAUSE (UNCHANGED)
 // ===========================================
 document.querySelector(".playpause").addEventListener("click", () => {
     if (wheelPaused) {
@@ -311,42 +220,37 @@ document.querySelector(".playpause").addEventListener("click", () => {
     }
 });
 
+// ===========================================
+// ⭐ COUNTER-ROTATE LETTERS (KEY FIX)
+// ===========================================
+function syncTextRotation() {
+    const transform = getComputedStyle(wheel).transform;
+    if (transform !== "none") {
+        const values = transform.split("(")[1].split(")")[0].split(",");
+        const a = values[0];
+        const b = values[1];
+        const angle = Math.atan2(b, a) * (180 / Math.PI);
 
-// ===========================================
-// QUIT GAME
-// ===========================================
-function quitGame() {
-    bubbleContainer.innerHTML = "";
-    targetValueBox.innerText = "";
-    alert("Game Stopped");
+        document.querySelectorAll(".bubble span").forEach(span => {
+            span.style.transform = `rotate(${-angle}deg)`;
+        });
+    }
+    requestAnimationFrame(syncTextRotation);
 }
-
+syncTextRotation();
 
 // ===========================================
 // TEXT TO SPEECH
 // ===========================================
 function speak(text) {
-    const utter = new SpeechSynthesisUtterance();
-
-    // If it's a single alphabet, speak only the letter sound
-    if (mode !== "colors" && /^[A-Z]$/.test(text)) {
-        utter.text = text;         // keep uppercase on screen
-        utter.spellOut = true;     // <-- important for iPad
-        utter.text = text.toLowerCase();  // but speak lowercase (prevents "CAPITAL")
-    }
-    else {
-        utter.text = text;
-    }
-
+    const utter = new SpeechSynthesisUtterance(text.toLowerCase());
     utter.rate = 0.9;
     utter.pitch = 1.1;
     utter.volume = 1;
-
     speechSynthesis.speak(utter);
 }
 
-
 // ===========================================
-// INIT GAME
+// INIT
 // ===========================================
 startLevel();

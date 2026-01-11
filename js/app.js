@@ -22,18 +22,23 @@ window.APP_DATA = {
                     variants: [
                         {
                             id: "color",
-                            title: "Color Wheel",
-                            url: "games/color-wheel/index.html"
+                            title: "Capital Wheel",
+                            url: "games/Capital-wheel/index.html"
                         },
                         {
                             id: "capital",
-                            title: "Capital Letters",
+                            title: "Small Wheel",
                             url: "games/capital-letters/index.html"
                         },
                         {
                             id: "small",
                             title: "Small Letters",
                             url: "games/small-letters/index.html"
+                        },
+                        {
+                            id: "fruits",
+                            title: "Fruits Wheel",
+                            url: "games/fruits-wheel/index.html"
                         }
                     ]
                 },

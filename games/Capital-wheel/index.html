@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capital Wheel</title>
+
+    <link rel="icon" type="images/png" href = "assests/wheel.png">
+    <!-- My CSS -->
+    <link rel="stylesheet" href="Bubble_pop.css">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+
+<body>
+
+<div class="main-layout">
+
+    <!-- LEFT: PLAY BUTTON -->
+    <!-- LEFT: CONTROLS -->
+    <div class="controls">
+
+        <!-- Play / Pause Button -->
+        <button class="btn playpause">
+            <i class="fa-solid fa-play"></i>
+        </button>
+
+        <!-- Mode Switch
+        <button class="btn modeSwitch">
+            A / 1
+        </button> -->
+
+        <!-- Target displayyyyyyy -->
+        <div id="target-box">
+            Find: <span id="target-value"></span>
+        </div>
+
+    </div>
+
+
+    <!-- CENTER: ROTATING WHEELlll -->
+    <div class="rotating-wheel">
+        <div id="target-display"></div>
+        <div id="bubble-container"></div>
+
+        <audio id="correctSound" src="assests/correct-83487.mp3"></audio>
+        <audio id="wrongSound" src="assests/wrong-47985.mp3"></audio>
+    </div>
+
+
+    <!-- RIGHT: HAMBURGER / OFFCANVAS -->
+    <div class="hamburger-wrapper">
+        <button class="hamburger-btn" 
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#menuOffcanvas">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+
+</div>
+
+<!-- OFFCANVAS MENU -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="menuOffcanvas">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Menu</h5>
+        <button type="button" class="btn-close btn-close-white"
+                data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body">
+
+        <button class="nav-btn">Quit</button>
+        <button class="nav-btn">Reset</button>
+
+        <h6 class="mt-3 text-white">Speed</h6>
+        <!-- <button class="nav-btn modeColors">Colors Mode</button> -->
+        <button class="nav-btn">0.5x</button>
+        <button class="nav-btn">1x</button>
+        <button class="nav-btn">1.25x</button>
+        <button class="nav-btn">1.75x</button>
+        <button class="nav-btn">2x</button>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
