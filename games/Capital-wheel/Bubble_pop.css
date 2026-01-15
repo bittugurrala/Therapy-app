@@ -348,3 +348,66 @@ body, html {
 .bubble {
     text-shadow: none;
 }
+#start-screen {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    cursor: pointer;
+}
+
+.start-emoji {
+    font-size: clamp(4rem, 10vw, 7rem);
+}
+
+.start-text {
+    margin-top: 1rem;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    color: white;
+}
+/* ============================
+   START EMOJI — COUNTER ROTATE
+   (LOCKED VISUALLY)
+============================ */
+
+/* Emoji container (must NOT inherit wheel rotation) */
+#start-screen {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+}
+
+/* Emoji itself */
+.start-emoji {
+    font-size: clamp(4.5rem, 10vw, 8rem);
+    animation:
+        counterRotate 25s linear infinite,   /* 🔁 cancels wheel */
+        shadowBeat 1.4s ease-in-out infinite;
+    transform-origin: center;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Counter rotation animation */
+@keyframes counterRotate {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(-360deg); } /* ⟲ counter-clockwise */
+}
+
+/* Shadow heartbeat ONLY */
+@keyframes shadowBeat {
+    0%   { filter: drop-shadow(0 0 10px rgba(255,80,80,0.5)); }
+    25%  { filter: drop-shadow(0 0 26px rgba(255,80,80,0.9)); }
+    50%  { filter: drop-shadow(0 0 14px rgba(255,80,80,0.6)); }
+    75%  { filter: drop-shadow(0 0 28px rgba(255,80,80,1)); }
+    100% { filter: drop-shadow(0 0 10px rgba(255,80,80,0.5)); }
+}
+
