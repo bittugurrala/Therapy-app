@@ -560,3 +560,9 @@ if (settingsModal) {
         wheel.style.backgroundColor = settings.wheelColor || "";
     });
 }
+// BLOCK TOUCH GESTURES (kiosk-style behavior)
+["touchstart", "touchmove", "touchend", "gesturestart", "gesturechange", "gestureend"].forEach(evt => {
+    document.addEventListener(evt, e => {
+        e.preventDefault();
+    }, { passive: false });
+});
