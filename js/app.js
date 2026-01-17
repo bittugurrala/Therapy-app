@@ -13,59 +13,73 @@ window.APP_STATE = {
 window.APP_DATA = {
     therapies: [
         {
+            // Vision Therapy
             id: "vision",
             title: "Vision Therapy",
             games: [
                 {
+                    // First Game Variants in Vision Therapy
                     id: "wheel",
-                    title: "Rotating Wheel",
+                    title: "Rotator Module",
                     variants: [
                         {
-                            id: "color",
-                            title: "Capital Wheel",
+                            id: "rotationUppercase",
+                            title: "Uppercase Letter Rotatory",
                             url: "games/Capital-wheel/index.html"
                         },
                         {
-                            id: "capital",
-                            title: "Small Wheel",
+                            id: "rotationLowercase",
+                            title: "Lowercase Letter Rotation",
                             url: "games/capital-letters/index.html"
                         },
                         {
-                            id: "small",
-                            title: "Small Letters",
+                            id: "rotationNumbers",
+                            title: "Numeric Rotation",
                             url: "games/small-letters/index.html"
                         },
                         {
-                            id: "fruits",
-                            title: "Fruits Wheel",
+                            id: "rotationColors",
+                            title: "Color Identification Rotation",
                             url: "games/fruits-wheel/index.html"
                         }
                     ]
                 },
                 {
-                    id: "alphabets",
-                    title: "Alphabets",
+                    // Second Game Variant in Vision Therapy
+                    id: "sorting",
+                    title: "Sorting Module",
                     variants: [
                         {
-                            id: "test",
-                            title: "Test Variant",
+                            id: "SortUppercase",
+                            title: "Uppercase Alphabet Sorting",
+                            url: "games/test/index.html"
+                        },
+                        {
+                            id: "SortLowercase",
+                            title: "Lowercase Alphabet Sorting",
+                            url: "games/test/index.html"
+                        },
+                        {
+                            id: "SortNumbers",
+                            title: "Numeric Sorting",
                             url: "games/test/index.html"
                         }
                     ]
                 }
             ]
         },
-        {
-            id: "speech",
-            title: "Speech Therapy",
-            games: [
-                {
-                    id: "coming",
-                    title: "Coming Soon",
-                    variants: []
-                }
-            ]
-        }
+        // Uncomment when games are ready Therapy
+        // {
+        //     id: "speech",
+        //     title: "Speech Therapy",
+        //     games: [
+        //         {
+        //             id: "coming",
+        //             title: "Coming Soon",
+        //             variants: []
+        //         }
+        //     ]
+        // }
     ]
 };
 
