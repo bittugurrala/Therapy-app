@@ -54,10 +54,7 @@
 
     <!-- RIGHT MENU -->
     <div class="hamburger-wrapper">
-        <button class="hamburger-btn"
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#menuOffcanvas">
+        <button class="hamburger-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuOffcanvas">
             <i class="fa-solid fa-bars"></i>
         </button>
     </div>
@@ -68,8 +65,7 @@
 <div class="offcanvas offcanvas-end" tabindex="-1" id="menuOffcanvas">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title">Menu</h5>
-        <button type="button" class="btn-close btn-close-white"
-                data-bs-dismiss="offcanvas"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
 
     <div class="offcanvas-body">
@@ -78,9 +74,7 @@
         <button class="nav-btn">Reset</button>
 
         <!-- SETTINGS -->
-        <button class="nav-btn"
-                data-bs-toggle="modal"
-                data-bs-target="#settingsModal">
+        <button class="nav-btn" data-bs-toggle="modal" data-bs-target="#settingsModal">
             Settings
         </button>
 
@@ -95,18 +89,22 @@
 </div>
 
 <!-- SETTINGS MODAL -->
-<!-- SETTINGS MODAL -->
 <div class="modal fade" id="settingsModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content bg-dark text-white">
 
       <div class="modal-header">
         <h5 class="modal-title">Capital Letters Settings</h5>
-        <button type="button" class="btn-close btn-close-white"
-                data-bs-dismiss="modal"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
 
       <div class="modal-body">
+
+        <!-- PATIENT INFO -->
+        <div class="mb-3 border-bottom pb-3">
+          <label class="form-label text-white-50">Patient Name</label>
+          <input id="setting-patient-name" type="text" value="Demo Patient" class="form-control bg-dark text-white border-secondary">
+        </div>
 
         <!-- LETTER SIZE -->
         <div class="mb-3">
@@ -114,28 +112,34 @@
             Letter Size
             <span id="letterSizeValue">1.8</span>
           </label>
-          <input id="setting-letter-size"
-                 type="range"
-                 min="1"
-                 max="3"
-                 step="0.1"
-                 value="1.8"
-                 class="form-range">
+          <input id="setting-letter-size" type="range" min="1" max="3" step="0.1" value="1.8" class="form-range">
         </div>
 
-        <!-- BUBBLE SIZE (optional but useful clinically) -->
+        <!-- STIMULUS SIZE -->
         <div class="mb-3">
           <label class="form-label d-flex justify-content-between">
             Stimulus Size
             <span id="bubbleSizeValue">90</span>
           </label>
-          <input id="setting-bubble-size"
-                 type="range"
-                 min="60"
-                 max="140"
-                 step="5"
-                 value="90"
-                 class="form-range">
+          <input id="setting-bubble-size" type="range" min="40" max="150" step="1" value="90" class="form-range">
+        </div>
+
+        <!-- BUBBLE COLORS -->
+        <div class="mb-3">
+          <label class="form-label text-white-50">Bubble Colors</label>
+          <div class="d-flex gap-2">
+            <input id="setting-color-1" type="color" value="#FFFFFF" class="form-control form-control-color flex-grow-1">
+            <input id="setting-color-2" type="color" value="#2F80FF" class="form-control form-control-color flex-grow-1">
+            <input id="setting-color-3" type="color" value="#FF3B30" class="form-control form-control-color flex-grow-1">
+          </div>
+        </div>
+
+        <!-- WHEEL COLOR -->
+        <div class="mb-3">
+          <label class="form-label d-flex justify-content-between">
+            Wheel Color
+          </label>
+          <input id="setting-wheel-color" type="color" value="#0a1a3a" class="form-control form-control-color w-100">
         </div>
 
         <!-- CONTRAST (future-ready) -->
@@ -144,28 +148,48 @@
             Contrast
             <span id="contrastValue">100%</span>
           </label>
-          <input id="setting-contrast"
-                 type="range"
-                 min="50"
-                 max="150"
-                 step="10"
-                 value="100"
-                 class="form-range">
+          <input id="setting-contrast" type="range" min="50" max="150" step="10" value="100" class="form-range">
         </div>
 
         <!-- PREVIEW -->
         <div class="text-center mt-4">
           <div class="preview-box">
-            <span id="preview-letter">A</span>
+            <span id="preview-letter" style="font-size: 1.8rem; font-weight: 800; display: inline-block;">A</span>
           </div>
           <small class="text-secondary">Live Preview</small>
+        </div>
+        
+        <!-- SESSION PARAMETERS (Live) -->
+        <div class="mt-4 border-top pt-3">
+          <h6 class="text-white-50 mb-3">Live Session Stats</h6>
+          <div class="row g-2 text-center text-muted">
+            <div class="col-4">
+              <small>Reaction</small>
+              <div class="fw-bold text-white"><span id="stat-reaction">-</span>ms</div>
+            </div>
+            <div class="col-4">
+              <small>Duration</small>
+              <div class="fw-bold text-white"><span id="stat-duration">-</span>s</div>
+            </div>
+            <div class="col-4">
+              <small>Clicks</small>
+              <div class="fw-bold text-white"><span id="stat-clicks">-</span></div>
+            </div>
+            <div class="col-6 mt-2">
+              <small>Correct</small>
+              <div class="fw-bold text-success"><span id="stat-correct">-</span></div>
+            </div>
+            <div class="col-6 mt-2">
+              <small>Wrong</small>
+              <div class="fw-bold text-danger"><span id="stat-wrong">-</span></div>
+            </div>
+          </div>
         </div>
 
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-secondary"
-                data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal" id="cancelSettings">Close</button>
         <button class="btn btn-primary" id="applySettings">
           Apply
         </button>
@@ -178,27 +202,54 @@
 
 <!-- RESULT MODAL -->
 <div class="modal fade" id="resultModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-white">
-
-            <div class="modal-header">
-                <h5 class="modal-title">Session Results</h5>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title w-100 text-center">********** Capital Wheel Results **********</h5>
             </div>
+            <div class="modal-body p-4" id="print-area">
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <p class="mb-1"><strong>Patient:</strong> <span id="res-patient"></span></p>
+                        <p class="mb-1"><strong>Session #:</strong> <span id="res-session-id"></span></p>
+                        <p class="mb-1"><strong>Date:</strong> <span id="res-date"></span></p>
+                        <p class="mb-1"><strong>Game:</strong> Capital Letters – Rotator</p>
+                    </div>
+                </div>
 
-            <div class="modal-body">
-                <p>Total Bubbles: <span id="res-total"></span></p>
-                <p>Correct: <span id="res-correct"></span></p>
-                <p>Wrong: <span id="res-wrong"></span></p>
-                <p>Accuracy: <span id="res-accuracy"></span>%</p>
-                <p>Duration: <span id="res-time"></span> sec</p>
+                <div class="text-center mb-2">-------------------- Settings --------------------</div>
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <p class="mb-1">Number of Stimuli: <span id="res-stimuli-count"></span></p>
+                        <p class="mb-1">Letter Size: <span id="res-letter-size-val"></span></p>
+                    </div>
+                    <div class="col-6">
+                        <p class="mb-1">Speed Level: <span id="res-speed-level"></span></p>
+                        <p class="mb-1">Direction: Clockwise</p>
+                    </div>
+                </div>
+
+                <div class="text-center mb-2">-------------------- Results Overall --------------------</div>
+                <div class="row">
+                    <div class="col-4">
+                        <p class="mb-1">Duration: <span id="res-time"></span>s</p>
+                        <p class="mb-1">Accuracy: <span id="res-accuracy"></span>%</p>
+                    </div>
+                    <div class="col-4">
+                        <p class="mb-1">Hits: <span id="res-correct"></span></p>
+                        <p class="mb-1">Misses: <span id="res-wrong"></span></p>
+                    </div>
+                    <div class="col-4">
+                        <p class="mb-1">Total Clicks: <span id="res-clicks-total"></span></p>
+                        <p class="mb-1">Avg React: <span id="res-avg-react"></span>s</p>
+                    </div>
+                </div>
             </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-primary">Export CSV</button>
-                <button class="btn btn-secondary"
-                        data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer border-secondary justify-content-center">
+                <button class="btn btn-outline-light px-4" id="downloadCSV">Download CSV</button>
+                <button class="btn btn-outline-light px-4" onclick="window.print()">Print</button>
+                <button class="btn btn-primary px-4" data-bs-dismiss="modal">Return</button>
             </div>
-
         </div>
     </div>
 </div>
@@ -208,6 +259,8 @@
 
 <!-- GAME LOGIC -->
 <script src="script.js"></script>
+
+<script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-repl-id="3f53980f-bfb7-4193-850b-13bf11f75701"></script>
 
 </body>
 </html>

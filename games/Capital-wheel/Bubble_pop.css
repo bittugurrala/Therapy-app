@@ -403,11 +403,27 @@ body, html {
 }
 
 /* Shadow heartbeat ONLY */
-@keyframes shadowBeat {
-    0%   { filter: drop-shadow(0 0 10px rgba(255,80,80,0.5)); }
-    25%  { filter: drop-shadow(0 0 26px rgba(255,80,80,0.9)); }
-    50%  { filter: drop-shadow(0 0 14px rgba(255,80,80,0.6)); }
-    75%  { filter: drop-shadow(0 0 28px rgba(255,80,80,1)); }
-    100% { filter: drop-shadow(0 0 10px rgba(255,80,80,0.5)); }
+/* ============================
+   PRINT STYLES
+============================ */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #print-area, #print-area * {
+        visibility: visible;
+    }
+    #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        color: black !important;
+        background: white !important;
+    }
+    .modal-content {
+        border: none !important;
+        background: white !important;
+        color: black !important;
+    }
 }
-
