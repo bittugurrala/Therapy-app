@@ -55,7 +55,7 @@ let therapyColors = ["#FFFFFF", "#2F80FF", "#FF3B30"];
 // UTILITIES
 // ===========================================
 function randomLetter() {
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const letters = "abcdefghijklmnopqrstuvwxyz";
     return letters[Math.floor(Math.random() * letters.length)];
 }
 
@@ -423,7 +423,7 @@ function endSession() {
         Patient: settings.patientName,
         SessionID: sessionId,
         Date: dateStr,
-        Game: "Uppercase Letters Rotation",
+        Game: "Lowercase Letters Rotation",
         Stimuli: stats.bubblesAppeared,
         LetterSize: settings.letterSize,
         Speed: currentSpeedLabel,

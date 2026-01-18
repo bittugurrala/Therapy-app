@@ -30,12 +30,12 @@ window.APP_DATA = {
                         {
                             id: "rotationLowercase",
                             title: "Lowercase Letter Rotation",
-                            url: "games/capital-letters/index.html"
+                            url: "games/small-wheel/index.html"
                         },
                         {
                             id: "rotationNumbers",
                             title: "Numeric Rotation",
-                            url: "games/small-letters/index.html"
+                            url: "games/Numeric-wheel/index.html"
                         },
                         {
                             id: "rotationColors",
