@@ -20,7 +20,7 @@ window.APP_DATA = {
                 {
                     // First Game Variants in Vision Therapy
                     id: "wheel",
-                    title: "Rotator Module",
+                    title: "Rotatory Module",
                     variants: [
                         {
                             id: "rotationUppercase",
