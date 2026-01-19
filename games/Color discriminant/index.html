@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Numeric Rotator</title>
+    <title>Color Discriminant</title>
 
     <link rel="icon" type="image/png" href="assests/wheel.png">
 
@@ -100,7 +100,7 @@
     <div class="modal-content bg-dark text-white">
 
       <div class="modal-header">
-        <h5 class="modal-title">Capital Letters Settings</h5>
+        <h5 class="modal-title">Color Discriminant</h5>
         <button type="button" class="btn-close btn-close-white"
                 data-bs-dismiss="modal"></button>
       </div>
@@ -164,25 +164,20 @@
                  class="form-control form-control-color w-100">
         </div>
 
-        <!-- NUMBER RANGE -->
+        <!-- LEVEL SELECTOR -->
         <div class="mb-3">
-          <label class="form-label text-white-50">Number Range</label>
-          <div class="d-flex gap-2">
-            <div class="flex-grow-1">
-              <small class="text-white-50">Min</small>
-              <input id="setting-min-num" type="number" value="0" class="form-control bg-dark text-white border-secondary">
-            </div>
-            <div class="flex-grow-1">
-              <small class="text-white-50">Max</small>
-              <input id="setting-max-num" type="number" value="9" class="form-control bg-dark text-white border-secondary">
-            </div>
-          </div>
+          <label class="form-label text-white-50">Child Level</label>
+          <select id="setting-child-level" class="form-select bg-dark text-white border-secondary">
+            <option value="Beginner">L1 [Red, Blue, Green, Yellow]</option>
+            <option value="Intermediate" selected>L2 [Red, Blue, Green, Yellow, Orange, Purple]</option>
+            <option value="Advanced">L3 [Red, Blue, Green, Yellow, Orange, Purple, Pink, White]</option>
+          </select>
         </div>
 
         <!-- PREVIEW -->
         <div class="text-center mt-4">
           <div class="preview-box">
-            <span id="preview-letter" style="font-size: 1.8em; font-weight: 800; display: inline-block;">1</span>
+            <span id="preview-letter" style="font-size: 1.2rem; font-weight: 800; display: inline-block;">Red</span>
           </div>
           <small class="text-secondary">Live Preview</small>
         </div>
@@ -244,7 +239,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content bg-dark text-white border-secondary">
             <div class="modal-header border-secondary">
-                <h5 class="modal-title w-100 text-center">********** Capital Wheel Results **********</h5>
+                <h5 class="modal-title w-100 text-center">********** Color Discriminant Results **********</h5>
             </div>
             <div class="modal-body p-4" id="print-area">
                 <div class="row mb-4">
@@ -252,16 +247,16 @@
                         <p class="mb-1"><strong>Patient:</strong> <span id="res-patient"></span></p>
                         <p class="mb-1"><strong>Session #:</strong> <span id="res-session-id"></span></p>
                         <p class="mb-1"><strong>Date:</strong> <span id="res-date"></span></p>
-                        <p class="mb-1"><strong>Game:</strong> Capital Letters – Rotator</p>
+                        <p class="mb-1"><strong>Game:</strong> Color Discriminant</p>
                     </div>
                 </div>
 
                 <div class="text-center mb-2">-------------------- Settings --------------------</div>
                 <div class="row mb-4">
                     <div class="col-6">
-                        <p class="mb-1">Number Range: <span id="res-range"></span></p>
+                        <p class="mb-1">Child Level: <span id="res-level"></span></p>
+                        <p class="mb-1">Colors Used: <span id="res-colors-used"></span></p>
                         <p class="mb-1">Number of Stimuli: <span id="res-stimuli-count"></span></p>
-                        <p class="mb-1">Letter Size: <span id="res-letter-size-val"></span></p>
                     </div>
                     <div class="col-6">
                         <p class="mb-1">Speed Level: <span id="res-speed-level"></span></p>
