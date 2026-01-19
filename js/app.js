@@ -24,23 +24,23 @@ window.APP_DATA = {
                     variants: [
                         {
                             id: "rotationUppercase",
-                            title: "Uppercase Letter Rotatory",
-                            url: "games/Capital-wheel/index.html"
+                            title: "Uppercase Rotatory",
+                            url: "games/rotatoryModule/uppercaseWheel/index.html"
                         },
                         {
                             id: "rotationLowercase",
-                            title: "Lowercase Letter Rotation",
-                            url: "games/small-wheel/index.html"
+                            title: "Lowercase Rotatory",
+                            url: "games/rotatoryModule/lowercaseWheel/index.html"
                         },
                         {
                             id: "rotationNumbers",
-                            title: "Numeric Rotation",
-                            url: "games/Numeric-wheel/index.html"
+                            title: "Numeric Rotatory",
+                            url: "games/rotatoryModule/numericWheel/index.html"
                         },
                         {
                             id: "rotationColors",
-                            title: "Color Identification Rotation",
-                            url: "games/fruits-wheel/index.html"
+                            title: "Color Discriminant",
+                            url: "games/rotatoryModule/colorDiscriminant/index.html"
                         }
                     ]
                 },
