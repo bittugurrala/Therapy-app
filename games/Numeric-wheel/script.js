@@ -24,13 +24,20 @@ const totalRounds = 2;
 // ===========================================
 // SETTINGS (capital letters game)
 // ===========================================
-const settings = {
+const DEFAULT_SETTINGS = {
     bubbleCount: 10,
     rotationDuration: 25,
     bubbleSizeRatio: 0.095,
     letterSize: 1.8,
-    patientName: "Demo Patient"
+    patientName: "Demo Patient",
+    minNum: 0,
+    maxNum: 9,
+    bubbleSizePx: 90,
+    wheelColor: "#0a1a3a",
+    bubbleColors: ["#FFFFFF", "#2F80FF", "#FF3B30"]
 };
+
+let settings = { ...DEFAULT_SETTINGS };
 
 // ===========================================
 // SESSION TRACKER (CLINICAL STYLE)
@@ -55,21 +62,14 @@ let therapyColors = ["#FFFFFF", "#2F80FF", "#FF3B30"];
 // UTILITIES
 // ===========================================
 function randomLetter() {
-    const letters = "1234567890";
-    return letters[Math.floor(Math.random() * letters.length)];
+    const min = parseInt(settings.minNum) || 0;
+    const max = parseInt(settings.maxNum) || 9;
+    const num = Math.floor(Math.random() * (max - min + 1)) + min;
+    return num.toString();
 }
 
-/**
- * Calculate contrast color (black or white) for text over a background hex color
- */
 function getContrastColor(hexColor) {
-    // Convert hex to RGB
-    const r = parseInt(hexColor.slice(1, 3), 16);
-    const g = parseInt(hexColor.slice(3, 5), 16);
-    const b = parseInt(hexColor.slice(5, 7), 16);
-    // Calculate relative luminance
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return luminance > 0.5 ? "#000000" : "#FFFFFF";
+    return "#000000"; // Fixed readable color as requested
 }
 
 /**
@@ -98,8 +98,7 @@ const updateBubbleColorsRealtime = () => {
         bubble.style.background = color;
         const span = bubble.querySelector("span");
         if (span) {
-            const contrast = getContrastColor(color);
-            span.style.setProperty('color', contrast, 'important');
+            span.style.setProperty('color', '#000000', 'important');
             span.style.setProperty('visibility', 'visible', 'important');
             span.style.setProperty('opacity', '1', 'important');
             // Ensure no other clipping or visibility issues
@@ -169,15 +168,66 @@ function startGame() {
     startLevel();
 }
 
+function generateNumberPool(count) {
+    const min = parseInt(settings.minNum) || 0;
+    const max = parseInt(settings.maxNum) || 9;
+    const range = max - min + 1;
+    let pool = [];
+
+    // Create a list of all possible numbers in the range
+    let allNumbers = [];
+    for (let i = min; i <= max; i++) {
+        allNumbers.push(i.toString());
+    }
+
+    // Fisher-Yates shuffle helper
+    const shuffle = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    };
+
+    // Build the pool ensuring even distribution and max 2 occurrences
+    // We want to fill 'count' slots.
+    // We'll use a local tracker to ensure no number appears more than twice.
+    let numberCounts = {};
+    allNumbers.forEach(n => numberCounts[n] = 0);
+
+    let available = [...allNumbers];
+    
+    for (let i = 0; i < count; i++) {
+        if (available.length === 0) {
+            // If we ran out of available numbers (all reached limit), 
+            // reset but this shouldn't happen if count is reasonable relative to range
+            available = [...allNumbers].filter(n => numberCounts[n] < 2);
+            if (available.length === 0) break; 
+        }
+        
+        const randomIndex = Math.floor(Math.random() * available.length);
+        const chosen = available[randomIndex];
+        pool.push(chosen);
+        numberCounts[chosen]++;
+        
+        if (numberCounts[chosen] >= 2) {
+            available.splice(randomIndex, 1);
+        }
+    }
+
+    return shuffle(pool);
+}
+
 function startLevel() {
     bubbleContainer.innerHTML = "";
     bubblePositions = [];
     poppingTargetActive = false;
 
-    for (let i = 0; i < settings.bubbleCount; i++) {
-        createBubble(randomLetter());
+    const pool = generateNumberPool(settings.bubbleCount);
+    pool.forEach(num => {
+        createBubble(num);
         stats.bubblesAppeared++;
-    }
+    });
 
     setTimeout(chooseNextTarget, 300);
 }
@@ -364,9 +414,9 @@ function syncTextRotation() {
 
         // Safe check for previewLetter (using local constant to avoid hoisting issues)
         const pl = document.getElementById("preview-letter");
-        // if (pl) {
-        //     pl.style.transform = `rotate(${-angle}deg)`;
-        // }
+        if (pl) {
+            pl.style.transform = `rotate(${-angle}deg)`;
+        }
     }
     requestAnimationFrame(syncTextRotation);
 }
@@ -404,6 +454,9 @@ function endSession() {
     document.getElementById("res-patient").innerText = settings.patientName;
     document.getElementById("res-session-id").innerText = sessionId;
     document.getElementById("res-date").innerText = dateStr;
+    const rangeStr = `${settings.minNum}–${settings.maxNum}`;
+    const resRangeElem = document.getElementById("res-range");
+    if (resRangeElem) resRangeElem.innerText = rangeStr;
     document.getElementById("res-stimuli-count").innerText = stats.bubblesAppeared;
     document.getElementById("res-letter-size-val").innerText = settings.letterSize;
     document.getElementById("res-speed-level").innerText = currentSpeedLabel;
@@ -423,7 +476,8 @@ function endSession() {
         Patient: settings.patientName,
         SessionID: sessionId,
         Date: dateStr,
-        Game: "Numeric Rotation",
+        Game: "Numeric Wheel – Rotator",
+        Range: rangeStr,
         Stimuli: stats.bubblesAppeared,
         LetterSize: settings.letterSize,
         Speed: currentSpeedLabel,
@@ -474,21 +528,55 @@ const wheelColorInput = document.getElementById("setting-wheel-color");
 const applySettingsBtn = document.getElementById("applySettings");
 const settingsModal = document.getElementById("settingsModal");
 
+const minNumInput = document.getElementById("setting-min-num");
+const maxNumInput = document.getElementById("setting-max-num");
+const resetToDefaultBtn = document.getElementById("resetToDefault");
+
 // Initialize inputs with current settings
-if (letterSizeInput) {
-    letterSizeInput.value = settings.letterSize;
-    letterSizeValue.innerText = settings.letterSize;
-    previewLetter.style.fontSize = `${settings.letterSize}rem`;
+function syncSettingsToUI() {
+    if (letterSizeInput) {
+        letterSizeInput.value = settings.letterSize;
+        letterSizeValue.innerText = settings.letterSize;
+        previewLetter.style.fontSize = `${settings.letterSize}rem`;
+    }
+    if (patientNameInput) patientNameInput.value = settings.patientName;
+    if (bubbleSizeInput) {
+        bubbleSizeInput.value = settings.bubbleSizePx || 90;
+        bubbleSizeValue.innerText = settings.bubbleSizePx || 90;
+    }
+    if (minNumInput) minNumInput.value = settings.minNum;
+    if (maxNumInput) maxNumInput.value = settings.maxNum;
+    
+    // Ensure min/max logic is consistent
+    if (minNumInput && maxNumInput) {
+        const checkRange = () => {
+            if (parseInt(maxNumInput.value) < parseInt(minNumInput.value)) {
+                maxNumInput.value = minNumInput.value;
+            }
+        };
+        minNumInput.addEventListener("change", checkRange);
+        maxNumInput.addEventListener("change", checkRange);
+    }
+    
+    if (colorInput1) {
+        colorInput1.value = therapyColors[0];
+        colorInput2.value = therapyColors[1];
+        colorInput3.value = therapyColors[2];
+    }
+    if (wheelColorInput) wheelColorInput.value = settings.wheelColor || "#0a1a3a";
 }
-if (patientNameInput) patientNameInput.value = settings.patientName;
-if (bubbleSizeInput) {
-    bubbleSizeInput.value = settings.bubbleSizePx || 90;
-    bubbleSizeValue.innerText = settings.bubbleSizePx || 90;
-}
-if (colorInput1) {
-    colorInput1.value = therapyColors[0];
-    colorInput2.value = therapyColors[1];
-    colorInput3.value = therapyColors[2];
+
+syncSettingsToUI();
+
+if (resetToDefaultBtn) {
+    resetToDefaultBtn.addEventListener("click", () => {
+        settings = { ...DEFAULT_SETTINGS };
+        therapyColors = [...DEFAULT_SETTINGS.bubbleColors];
+        syncSettingsToUI();
+        // Update Live Preview immediately
+        updateBubbleColorsRealtime();
+        wheel.style.backgroundColor = settings.wheelColor;
+    });
 }
 
 // Slider Live Preview - Letter Size
@@ -514,15 +602,10 @@ if (bubbleSizeInput) {
             bubble.style.height = `${val}px`;
             bubble.style.width = `${val}px`;
             
-            // Re-evaluate text contrast after resizing
+            // Re-evaluate text visibility after resizing
             const span = bubble.querySelector("span");
             if (span) {
-                // FORCE RE-EVALUATION: Use inline style if available, fallback to computed
-                let currentBg = bubble.style.backgroundColor || getComputedStyle(bubble).backgroundColor;
-                currentBg = rgbToHex(currentBg);
-                const contrast = getContrastColor(currentBg);
-                
-                span.style.setProperty('color', contrast, 'important');
+                span.style.setProperty('color', '#000000', 'important');
                 span.style.setProperty('visibility', 'visible', 'important');
                 span.style.setProperty('opacity', '1', 'important');
                 span.style.display = 'flex';
@@ -575,6 +658,8 @@ if (applySettingsBtn) {
         settings.patientName = patientNameInput.value;
         settings.letterSize = parseFloat(letterSizeInput.value);
         settings.bubbleSizePx = parseFloat(bubbleSizeInput.value);
+        settings.minNum = parseInt(minNumInput.value);
+        settings.maxNum = parseInt(maxNumInput.value);
         therapyColors = [colorInput1.value, colorInput2.value, colorInput3.value];
         settings.wheelColor = wheelColorInput.value;
         
@@ -590,17 +675,17 @@ if (applySettingsBtn) {
             const span = bubble.querySelector("span");
             if (span) {
                 span.style.fontSize = `${settings.letterSize}rem`;
-                // CRITICAL FIX: Re-evaluate contrast and visibility when applying settings
-                const contrast = getContrastColor(color);
-                span.style.setProperty('color', contrast, 'important');
+                // Fixed text color
+                span.style.setProperty('color', '#000000', 'important');
                 span.style.setProperty('visibility', 'visible', 'important');
                 span.style.setProperty('opacity', '1', 'important');
             }
         });
         wheel.style.backgroundColor = settings.wheelColor;
 
-        // Hide modal (Bootstrap 5)
-        const modal = bootstrap.Modal.getInstance(settingsModal);
+        // Auto-close modal (Bootstrap 5)
+        const modalEl = document.getElementById('settingsModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
         if (modal) modal.hide();
     });
 }
