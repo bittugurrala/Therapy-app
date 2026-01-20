@@ -100,7 +100,7 @@
     <div class="modal-content bg-dark text-white">
 
       <div class="modal-header">
-        <h5 class="modal-title">Color Discriminant</h5>
+        <h5 class="modal-title">Color Discriminant Settings</h5>
         <button type="button" class="btn-close btn-close-white"
                 data-bs-dismiss="modal"></button>
       </div>
@@ -113,25 +113,10 @@
           <input id="setting-patient-name" type="text" value="Demo Patient" class="form-control bg-dark text-white border-secondary">
         </div>
 
-        <!-- LETTER SIZE -->
-        <div class="mb-3">
-          <label class="form-label d-flex justify-content-between">
-            Letter Size
-            <span id="letterSizeValue">1.8</span>
-          </label>
-          <input id="setting-letter-size"
-                 type="range"
-                 min="1"
-                 max="3"
-                 step="0.1"
-                 value="1.8"
-                 class="form-range">
-        </div>
-
         <!-- STIMULUS SIZE -->
         <div class="mb-3">
           <label class="form-label d-flex justify-content-between">
-            Stimulus Size
+            Bubble Size
             <span id="bubbleSizeValue">90</span>
           </label>
           <input id="setting-bubble-size"
@@ -141,16 +126,6 @@
                  step="1"
                  value="90"
                  class="form-range">
-        </div>
-
-        <!-- BUBBLE COLORS -->
-        <div class="mb-3">
-          <label class="form-label text-white-50">Bubble Colors</label>
-          <div class="d-flex gap-2">
-            <input id="setting-color-1" type="color" value="#FFFFFF" class="form-control form-control-color flex-grow-1">
-            <input id="setting-color-2" type="color" value="#2F80FF" class="form-control form-control-color flex-grow-1">
-            <input id="setting-color-3" type="color" value="#FF3B30" class="form-control form-control-color flex-grow-1">
-          </div>
         </div>
 
         <!-- WHEEL COLOR -->
@@ -256,9 +231,9 @@
                     <div class="col-6">
                         <p class="mb-1">Child Level: <span id="res-level"></span></p>
                         <p class="mb-1">Colors Used: <span id="res-colors-used"></span></p>
-                        <p class="mb-1">Number of Stimuli: <span id="res-stimuli-count"></span></p>
                     </div>
                     <div class="col-6">
+                        <p class="mb-1">Number of Stimuli: <span id="res-stimuli-count"></span></p>
                         <p class="mb-1">Speed Level: <span id="res-speed-level"></span></p>
                         <p class="mb-1">Direction: Clockwise</p>
                     </div>

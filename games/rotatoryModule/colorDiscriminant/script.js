@@ -22,19 +22,17 @@ let currentRound = 1;
 const totalRounds = 2;
 
 // ===========================================
-// SETTINGS (capital letters game)
+// SETTINGS (Color Discriminant)
 // ===========================================
 const DEFAULT_SETTINGS = {
-    bubbleCount: 12,
+    bubbleCount: 10,
     rotationDuration: 25,
     bubbleSizeRatio: 0.095,
-    letterSize: 1.8,
     patientName: "Demo Patient",
     minNum: 0,
     maxNum: 9,
     bubbleSizePx: 90,
-    wheelColor: "#0a1a3a",
-    bubbleColors: ["#FFFFFF", "#2F80FF", "#FF3B30"]
+    wheelColor: "#0a1a3a"
 };
 
 let settings = { ...DEFAULT_SETTINGS };
@@ -140,8 +138,8 @@ setInterval(() => {
 
 function updateTargetDisplay() {
     const targetColor = LEVEL_COLORS_HEX[currentTarget] || "#333";
-    //targetValueBox.innerHTML = ` <span style="color: ${targetColor}; filter: drop-shadow(0 0 1px rgba(0,0,0,0.5));">${currentTarget}</span>`;
-    targetValueBox.innerHTML = ` <span>${currentTarget}</span>`;
+    // targetValueBox.innerHTML = `Find: <span style="color: ${targetColor}; filter: drop-shadow(0 0 1px rgba(0,0,0,0.5));">${currentTarget}</span>`;
+    targetValueBox.innerHTML = `<span>${currentTarget}</span>`;
 }
 
 // ===========================================
@@ -169,6 +167,7 @@ function startGame() {
         playPauseIcon.classList.replace("fa-play", "fa-pause");
     }
 
+    sessionId = Math.floor(1000 + Math.random() * 9000);
     startLevel();
 }
 
@@ -198,6 +197,7 @@ function startLevel() {
     bubbleContainer.innerHTML = "";
     bubblePositions = [];
     poppingTargetActive = false;
+    bubblesAppeared = 0;
 
     const pool = generateNumberPool(settings.bubbleCount);
     pool.forEach(num => {
@@ -256,7 +256,10 @@ function createBubble(colorName) {
     bubble.style.left = pos.x + "%";
     bubble.style.top = pos.y + "%";
 
-    bubble.onclick = () => handleBubbleClick(bubble);
+    bubble.onpointerdown = (e) => {
+        e.preventDefault();
+        handleBubbleClick(bubble);
+    };
     bubbleContainer.appendChild(bubble);
 }
 
@@ -418,6 +421,16 @@ function speak(text) {
     utter.pitch = 1.1;
     speechSynthesis.speak(utter);
 }
+function rebuildBubblesPreservingTargets() {
+    const existing = [...document.querySelectorAll(".bubble span")]
+        .map(s => s.innerText);
+
+    bubbleContainer.innerHTML = "";
+    bubblePositions = [];
+
+    existing.forEach(value => createBubble(value));
+}
+
 
 // ===========================================
 // SESSION END (RESULT READY)
@@ -447,7 +460,6 @@ function endSession() {
     document.getElementById("res-colors-used").innerText = LEVEL_COLORS[sessionLevel].join(", ");
     
     document.getElementById("res-stimuli-count").innerText = stats.bubblesAppeared;
-    document.getElementById("res-letter-size-val").innerText = settings.letterSize;
     document.getElementById("res-speed-level").innerText = currentSpeedLabel;
     
     document.getElementById("res-time").innerText = durationSec.toFixed(1);
@@ -470,7 +482,6 @@ function endSession() {
         Level: csvLevel,
         ColorsUsed: LEVEL_COLORS[csvLevel].join("; "),
         Stimuli: stats.bubblesAppeared,
-        LetterSize: settings.letterSize,
         Speed: currentSpeedLabel,
         Duration: durationSec.toFixed(1),
         Clicks: stats.clicks,
@@ -506,32 +517,19 @@ if (startScreen) {
 // ===========================================
 // SETTINGS LOGIC
 // ===========================================
-const letterSizeInput = document.getElementById("setting-letter-size");
-const letterSizeValue = document.getElementById("letterSizeValue");
-const previewLetter = document.getElementById("preview-letter");
 const patientNameInput = document.getElementById("setting-patient-name");
 const bubbleSizeInput = document.getElementById("setting-bubble-size");
 const bubbleSizeValue = document.getElementById("bubbleSizeValue");
-const colorInput1 = document.getElementById("setting-color-1");
-const colorInput2 = document.getElementById("setting-color-2");
-const colorInput3 = document.getElementById("setting-color-3");
 const wheelColorInput = document.getElementById("setting-wheel-color");
 const applySettingsBtn = document.getElementById("applySettings");
 const settingsModal = document.getElementById("settingsModal");
 
-const minNumInput = document.getElementById("setting-min-num");
-const maxNumInput = document.getElementById("setting-max-num");
 const resetToDefaultBtn = document.getElementById("resetToDefault");
 
 const childLevelInput = document.getElementById("setting-child-level");
 
 // Initialize inputs with current settings
 function syncSettingsToUI() {
-    if (letterSizeInput) {
-        letterSizeInput.value = settings.letterSize;
-        letterSizeValue.innerText = settings.letterSize;
-        previewLetter.style.fontSize = `${settings.letterSize}rem`;
-    }
     if (patientNameInput) patientNameInput.value = settings.patientName;
     if (bubbleSizeInput) {
         bubbleSizeInput.value = settings.bubbleSizePx || 90;
@@ -539,22 +537,6 @@ function syncSettingsToUI() {
     }
     if (childLevelInput) childLevelInput.value = settings.childLevel || "Intermediate";
     
-    // Ensure min/max logic is consistent
-    if (minNumInput && maxNumInput) {
-        const checkRange = () => {
-            if (parseInt(maxNumInput.value) < parseInt(minNumInput.value)) {
-                maxNumInput.value = minNumInput.value;
-            }
-        };
-        minNumInput.addEventListener("change", checkRange);
-        maxNumInput.addEventListener("change", checkRange);
-    }
-    
-    if (colorInput1) {
-        colorInput1.value = therapyColors[0];
-        colorInput2.value = therapyColors[1];
-        colorInput3.value = therapyColors[2];
-    }
     if (wheelColorInput) wheelColorInput.value = settings.wheelColor || "#0a1a3a";
 }
 
@@ -563,68 +545,51 @@ syncSettingsToUI();
 if (resetToDefaultBtn) {
     resetToDefaultBtn.addEventListener("click", () => {
         settings = { ...DEFAULT_SETTINGS };
-        therapyColors = [...DEFAULT_SETTINGS.bubbleColors];
         syncSettingsToUI();
         // Update Live Preview immediately
-        updateBubbleColorsRealtime();
         wheel.style.backgroundColor = settings.wheelColor;
-    });
-}
-
-// Slider Live Preview - Letter Size
-if (letterSizeInput) {
-    letterSizeInput.addEventListener("input", (e) => {
-        const val = e.target.value;
-        letterSizeValue.innerText = val;
-        previewLetter.style.fontSize = `${val}rem`;
-        // REALTIME: update existing bubbles
-        document.querySelectorAll(".bubble span").forEach(span => {
-            span.style.fontSize = `${val}rem`;
-        });
+        
+        // Refresh bubbles if active
+        if (!startScreen || startScreen.style.display === "none") {
+            startLevel();
+        }
     });
 }
 
 // Slider Live Preview - Stimulus Size
+// if (bubbleSizeInput) {
+//     bubbleSizeInput.addEventListener("input", (e) => {
+//         const val = e.target.value;
+//         bubbleSizeValue.innerText = val;
+//         settings.bubbleSizePx = parseFloat(val);
+        
+//         // REALTIME: update existing bubbles layout and size
+//         if (!startScreen || startScreen.style.display === "none") {
+//             const currentBubbles = [...document.querySelectorAll(".bubble")].map(b => {
+//                 const span = b.querySelector("span");
+//                 return span ? span.innerText : null;
+//             }).filter(Boolean);
+            
+//             bubbleContainer.innerHTML = "";
+//             bubblePositions = [];
+//             currentBubbles.forEach(colorName => createBubble(colorName));
+//         }
+//     });
+// }
+// Slider Live Preview - Stimulus Size (SAFE)
 if (bubbleSizeInput) {
     bubbleSizeInput.addEventListener("input", (e) => {
-        const val = e.target.value;
+        const val = parseInt(e.target.value, 10);
         bubbleSizeValue.innerText = val;
-        
-        // Re-generate layout immediately to show effect
-        bubbleContainer.innerHTML = "";
-        const oldPositions = [...bubblePositions];
-        bubblePositions = [];
-        
-        document.querySelectorAll(".bubble").forEach((bubble, idx) => {
-            const span = bubble.querySelector("span");
-            if (span) {
-                const colorName = span.innerText;
-                createBubble(colorName);
-            }
-        });
-        
-        // If no bubbles yet (start screen), just update settings
-        settings.bubbleSizePx = parseFloat(val);
+        settings.bubbleSizePx = val;
+
+        // ✅ SAFE: only rebuild layout, DO NOT restart game
+        if (!wheelPaused) {
+            rebuildBubblesPreservingTargets();
+        }
     });
 }
 
-/**
- * Helper to convert rgb(r, g, b) string to hex
- */
-function rgbToHex(rgb) {
-    if (!rgb || !rgb.startsWith('rgb')) return "#FFFFFF";
-    const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-    if (!match) return "#FFFFFF";
-    const r = parseInt(match[1]);
-    const g = parseInt(match[2]);
-    const b = parseInt(match[3]);
-    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
-}
-
-// Suggest Bubble Colors based on Wheel background
-if (colorInput1) colorInput1.addEventListener("input", updateBubbleColorsRealtime);
-if (colorInput2) colorInput2.addEventListener("input", updateBubbleColorsRealtime);
-if (colorInput3) colorInput3.addEventListener("input", updateBubbleColorsRealtime);
 
 // Color Live Preview - Wheel Color
 if (wheelColorInput) {
@@ -632,15 +597,6 @@ if (wheelColorInput) {
         const val = e.target.value;
         // REALTIME: update wheel
         wheel.style.backgroundColor = val;
-        
-        // AUTO SUGGEST: update bubble color inputs if they match wheel too closely
-        const suggestions = suggestBubbleColors(val);
-        colorInput1.value = suggestions[0];
-        colorInput2.value = suggestions[1];
-        colorInput3.value = suggestions[2];
-        
-        // Trigger live bubble update
-        updateBubbleColorsRealtime();
     });
 }
 
@@ -648,7 +604,6 @@ if (wheelColorInput) {
 if (applySettingsBtn) {
     applySettingsBtn.addEventListener("click", () => {
         settings.patientName = patientNameInput.value;
-        settings.letterSize = parseFloat(letterSizeInput.value);
         settings.bubbleSizePx = parseFloat(bubbleSizeInput.value);
         settings.childLevel = childLevelInput.value;
         settings.wheelColor = wheelColorInput.value;
@@ -676,23 +631,20 @@ if (settingsModal) {
     settingsModal.addEventListener('hidden.bs.modal', () => {
         // Revert UI to match stored settings
         patientNameInput.value = settings.patientName;
-        letterSizeInput.value = settings.letterSize;
-        letterSizeValue.innerText = settings.letterSize;
-        previewLetter.style.fontSize = `${settings.letterSize}rem`;
         bubbleSizeInput.value = settings.bubbleSizePx || 90;
         bubbleSizeValue.innerText = settings.bubbleSizePx || 90;
-        colorInput1.value = therapyColors[0];
-        colorInput2.value = therapyColors[1];
-        colorInput3.value = therapyColors[2];
         
         // Revert Realtime changes if not applied
-        document.querySelectorAll(".bubble").forEach((bubble, idx) => {
-            bubble.style.height = settings.bubbleSizePx ? `${settings.bubbleSizePx}px` : "clamp(40px, 7vw, 110px)";
-            bubble.style.width = settings.bubbleSizePx ? `${settings.bubbleSizePx}px` : "clamp(40px, 7vw, 110px)";
-            bubble.style.background = therapyColors[idx % 3];
-            const span = bubble.querySelector("span");
-            if (span) span.style.fontSize = `${settings.letterSize}rem`;
-        });
+        if (!startScreen || startScreen.style.display === "none") {
+            const currentBubbles = [...document.querySelectorAll(".bubble")].map(b => {
+                const span = b.querySelector("span");
+                return span ? span.innerText : null;
+            }).filter(Boolean);
+            
+            bubbleContainer.innerHTML = "";
+            bubblePositions = [];
+            currentBubbles.forEach(colorName => createBubble(colorName));
+        }
         wheel.style.backgroundColor = settings.wheelColor || "";
     });
 }
