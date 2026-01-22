@@ -1,0 +1,139 @@
+:root{
+    --navy: #0a1a3a;
+    --icon: #9aa3ad;
+}
+
+/* ===== GLOBAL ===== */
+html, body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    
+    overflow: hidden;
+    font-family: system-ui, sans-serif;
+}
+
+/* ===== MAIN LAYOUT ===== */
+.main-layout{
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    background-color: var(--navy);
+    
+}
+
+/* ===== GAME BOARD (FULL SCREEN) ===== */
+.game-board{
+    position: absolute;
+    inset: 0;
+}
+
+/* ===== START SCREEN ===== */
+#start-screen{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.start-emoji{
+    font-size: clamp(5rem, 12vw, 8rem);
+    user-select: none;
+}
+
+/* ===== BUBBLE CONTAINER ===== */
+#bubble-container{
+    position: absolute;
+    inset: 0;
+}
+
+/* ===== BUBBLES ===== */
+.bubble{
+    position: absolute;
+    height: clamp(50px, 8vw, 110px);
+    width: clamp(50px, 8vw, 110px);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #000;
+
+    box-shadow:
+        0 0 15px rgba(255,255,255,0.4),
+        0 10px 25px rgba(0,0,0,0.4);
+
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.15s ease;
+}
+
+.bubble:active{
+    transform: scale(1.1);
+}
+
+/* Pop animation */
+.bubble.pop{
+    animation: popAnim 0.25s ease-out forwards;
+}
+
+@keyframes popAnim{
+    to{
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* ===== HAMBURGER ===== */
+.hamburger-wrapper{
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+}
+
+.hamburger-btn{
+    background: transparent;
+    border: none;
+    font-size: 3rem;
+    color: var(--icon);
+}
+
+/* ===== OFFCANVAS MENU ===== */
+.offcanvas{
+    background: #111 !important;
+    color: white;
+}
+
+.nav-btn{
+    width: 100%;
+    padding: 1rem;
+    background: #222;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    color: #ccc;
+    font-size: 1.2rem;
+}
+/* ===== FORCE EMOJI DEAD CENTER ===== */
+
+#start-screen{
+    position: fixed;     /* take it out of layout flow */
+    inset: 0;
+}
+
+.start-emoji{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(5rem, 12vw, 8rem);
+}
+
+
+
+
