@@ -37,7 +37,7 @@ const THEMES = {
 };
 
 const CONSTANTS = {
-    INITIAL_BATCH_SIZE: 6, // Start with A-F
+    INITIAL_BATCH_SIZE: 3, // Start with A-F
     ALPHABETS: "0123456789".split("")
 };
 
