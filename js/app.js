@@ -52,12 +52,12 @@ window.APP_DATA = {
                         {
                             id: "SortUppercase",
                             title: "Uppercase Alphabet Sorting",
-                            url: "games/sortingModule/index.html"
+                            url: "games/sortingModule/uppercaseSorting/index.html"
                         },
                         {
                             id: "SortLowercase",
                             title: "Lowercase Alphabet Sorting",
-                            url: "games/sortingModule/index.html"
+                            url: "games/sortingModule/lowercaseSorting/index.html"
                         },
                         {
                             id: "SortNumbers",

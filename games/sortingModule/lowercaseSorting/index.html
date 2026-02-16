@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lowercase Sorting</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="main-layout">
+
+        <!-- GAME BOARD -->
+        <div class="game-board">
+
+            <!-- START SCREEN -->
+            <div id="start-screen">
+                <div class="start-emoji" id="emoji">
+                    <span id="eye-open">🙂</span>
+                    <span id="eye-closed" style="display:none;">😊</span>
+                </div>
+            </div>
+
+
+            <div id="bubble-container"></div>
+
+            <!-- Audio elements -->
+            <!-- Note: You'll need actual audio files in the assets folder or use base64 data URIs -->
+        </div>
+
+        <!-- HAMBURGER -->
+        <div class="hamburger-wrapper">
+            <button class="hamburger-btn" type="button" id="menuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- ================= MENU OVERLAY ================= -->
+    <div id="menuOverlay" class="overlay hidden">
+        <div class="offcanvas">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Menu</h5>
+                <button type="button" class="btn-close" id="menuCloseBtn">&times;</button>
+            </div>
+
+            <div class="offcanvas-body">
+                <button class="nav-btn" id="quitBtn">Quit</button>
+                <button class="nav-btn" id="resetBtn">Reset</button>
+                <button class="nav-btn" id="settingsBtn">Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= SETTINGS MODAL ================= -->
+    <div id="settingsModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Lowercase Sorting Settings</h5>
+                <!-- Close button removed to force 'Apply' usage at start, but can be re-added if needed -->
+            </div>
+
+            <div class="modal-body">
+
+                <!-- Patient -->
+                <div class="form-group border-bottom">
+                    <label class="form-label">Patient Name</label>
+                    <input placeholder="Demo Patient" id="setting-patient-name" type="text" 
+                            class="form-control">
+                </div>
+
+                <!-- Letter Size -->
+                <div class="form-group">
+                    <label class="form-label space-between">
+                        Letter Size
+                        <span id="letterSizeValue">1.8</span>
+                    </label>
+                    <input id="setting-letter-size" type="range"
+                            min="1" max="3" step="0.1"
+                            class="form-range">
+                </div>
+
+                <!-- Bubble Size -->
+                <div class="form-group">
+                    <label class="form-label space-between">
+                        Stimulus Size
+                        <span id="bubbleSizeValue">90</span>
+                    </label>
+                    <input id="setting-bubble-size" type="range"
+                            min="40" max="150" step="1"
+                            class="form-range">
+                </div>
+
+                <!-- Bubble Color -->
+                <div class="form-group">
+                    <label class="form-label">Theme Color</label>
+                    <div class="color-options">
+                        <div class="color-option selected" data-color="blue" style="background: #8fdfff;"></div>
+                        <div class="color-option" data-color="green" style="background: #8fff9f;"></div>
+                        <div class="color-option" data-color="purple" style="background: #d48fff;"></div>
+                        <div class="color-option" data-color="orange" style="background: #ffc98f;"></div>
+                    </div>
+                </div>
+
+                <!-- Glow Intensity -->
+                <div class="form-group">
+                    <label class="form-label space-between">
+                        Glow Intensity
+                        <span id="glowValue">0.5</span>
+                    </label>
+                    <input id="setting-glow" type="range"
+                            min="0" max="1" step="0.1" value="0.5"
+                            class="form-range">
+                </div>
+
+                <!-- Preview -->
+                <div class="preview-container">
+                    <div class="preview-box">
+                        <span id="preview-letter"
+                            style="font-size:2rem;font-weight:800;">a</span>
+                    </div>
+                    <small class="text-secondary">Live Preview</small>
+                </div>
+
+                <!-- Live Stats -->
+                <div class="stats-container border-top">
+                    <h6 class="stats-title">Live Session Stats</h6>
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <small>Reaction</small>
+                            <div class="stat-value"><span id="stat-reaction">-</span>ms</div>
+                        </div>
+                        <div class="stat-item">
+                            <small>Duration</small>
+                            <div class="stat-value"><span id="stat-duration">-</span>s</div>
+                        </div>
+                        <div class="stat-item">
+                            <small>Clicks</small>
+                            <div class="stat-value"><span id="stat-clicks">-</span></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeSettingsBtn">Close</button>
+                <button class="btn btn-primary" id="applySettings">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= RESULTS MODAL ================= -->
+    <div id="resultsModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Session Results</h5>
+            </div>
+            <div class="modal-body">
+                <div id="resultsContent" class="stats-container">
+                    <!-- Dynamic results will be injected here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="resultsCloseBtn">Close</button>
+                <button class="btn btn-primary" id="exportBtn">Export CSV</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script src="sorting.js"></script>
+</body>
+</html>
