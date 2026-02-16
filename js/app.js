@@ -62,7 +62,7 @@ window.APP_DATA = {
                         {
                             id: "SortNumbers",
                             title: "Numeric Sorting",
-                            url: "games/sortingModule/index.html"
+                            url: "games/sortingModule/numericSorting/index.html"
                         }
                     ]
                 }
