@@ -143,7 +143,7 @@ html, body{
     backdrop-filter: blur(3px);
 }
 
-.modal-content {
+/* .modal-content {
     background: var(--modal-bg);
     width: 90%;
     max-width: 500px;
@@ -151,7 +151,20 @@ html, body{
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     overflow: hidden;
     animation: slideIn 0.3s ease-out;
+} */
+
+.modal-content {
+    background: var(--modal-bg);
+    width: 90%;
+    max-width: 500px;
+    max-height: 85vh;          /* ✅ limits modal height */
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    overflow: hidden;          /* header/footer fixed */
+    display: flex;
+    flex-direction: column;
 }
+
 
 @keyframes slideIn {
     from { transform: translateY(20px); opacity: 0; }
@@ -172,9 +185,25 @@ html, body{
     font-weight: 600;
 }
 
+/* .modal-body {
+    padding: 1.5rem;
+} */
+
 .modal-body {
     padding: 1.5rem;
+    overflow-y: auto;          /* ✅ enables scroll */
+    -webkit-overflow-scrolling: touch; /* ✅ smooth scroll on iOS */
 }
+
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+}
+
 
 .modal-footer {
     padding: 1rem 1.5rem;
